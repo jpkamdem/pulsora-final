@@ -22,48 +22,51 @@ model User {
 }
 
 model Article {
-  id       Int    @id @default(autoincrement())
-  title    String
-  body     String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId Int
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  authorId  Int
 }
 
 model Team {
-  id     Int      @id @default(autoincrement())
-  name   String
-  Player Player[]
-  wins   Int
-  loses  Int
-  Game   Game[]
+  id       Int      @id @default(autoincrement())
+  name     String
+  Player   Player[]
+  wins     Int
+  loses    Int
+  homeGame Game[]   @relation("homeTeam")
+  awayGame Game[]   @relation("awayTeam")
 }
 
 model Player {
-  id        Int      @id @default(autoincrement())
-  firstname String
-  lastname  String
-  position  Position
-  number    Int
-  team      Team?    @relation(fields: [teamId], references: [id])
-  teamId    Int
+  id         Int        @id @default(autoincrement())
+  firstname  String
+  lastname   String
+  position   Position
+  number     Int
+  team       Team?      @relation(fields: [teamId], references: [id])
+  teamId     Int
+  status     Incident[]
+  incidentId Int
 }
 
 model Game {
-  id         Int  @id @default(autoincrement())
-  firstTeam  Team @relation(fields: [teamOne], references: [id])
-  teamOne    Int
-  secondTeam Team @relation(fields: [teamTwo], references: [id])
-  teamTwo    Int
-  scoreOne   Int
-  scoreTwo   Int
-
-  @@unique([teamOne, teamTwo])
+  id        Int  @id @default(autoincrement())
+  homeTeam  Team @relation("homeTeam", fields: [teamOne], references: [id])
+  teamOne   Int
+  awayTeam  Team @relation("awayTeam", fields: [teamTwo], references: [id])
+  teamTwo   Int
+  scoreHome Int
+  scoreAway Int
 }
 
 model Incident {
-  id     Int    @id @default(autoincrement())
+  id     Int      @id @default(autoincrement())
   type   String
   status Status
+  Player Player[]
 }
 
 enum Role {
