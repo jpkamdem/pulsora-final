@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String
+  password String
+  role     Role      @default(USER)
+  articles Article[]
+}
+
+model Article {
+  id       Int    @id @default(autoincrement())
+  title    String
+  body     String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+model Team {
+  id     Int      @id @default(autoincrement())
+  name   String
+  Player Player[]
+  wins   Int
+  loses  Int
+  Game   Game[]
+}
+
+model Player {
+  id        Int      @id @default(autoincrement())
+  firstname String
+  lastname  String
+  position  Position
+  number    Int
+  team      Team?    @relation(fields: [teamId], references: [id])
+  teamId    Int
+}
+
+model Game {
+  id         Int  @id @default(autoincrement())
+  firstTeam  Team @relation(fields: [teamOne], references: [id])
+  teamOne    Int
+  secondTeam Team @relation(fields: [teamTwo], references: [id])
+  teamTwo    Int
+  scoreOne   Int
+  scoreTwo   Int
+
+  @@unique([teamOne, teamTwo])
+}
+
+model Incident {
+  id     Int    @id @default(autoincrement())
+  type   String
+  status Status
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Position {
+  GK
+  DEF
+  MF
+  FW
+}
+
+enum Status {
+  Suspendu
+  Blessé
+  Opérationnel
+}
