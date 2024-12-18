@@ -19,6 +19,7 @@ export const getAllArticles = async (req: Request, res: Response) => {
 export const getArticleById = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+
     const article = await articleClient.findUnique({
       where: { id: Number(articleId) },
     });
@@ -37,6 +38,7 @@ interface ArticleInterfaceBis extends ArticleInterface {
 export const createArticle = async (req: Request, res: Response) => {
   try {
     const { title, body, authorId }: ArticleInterfaceBis = req.body;
+
     const article = await articleClient.create({
       data: {
         title,
@@ -55,7 +57,9 @@ export const createArticle = async (req: Request, res: Response) => {
 export const updateArticle = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+
     const { title, body, authorId }: ArticleInterfaceBis = req.body;
+
     const article = await articleClient.update({
       where: { id: Number(articleId) },
       data: {
@@ -75,6 +79,7 @@ export const updateArticle = async (req: Request, res: Response) => {
 export const deleteArticle = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+
     const article = await articleClient.delete({
       where: { id: Number(articleId) },
     });

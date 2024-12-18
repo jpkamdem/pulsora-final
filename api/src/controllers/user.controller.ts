@@ -22,6 +22,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
+
     const user = await userClient.findUnique({
       where: {
         id: Number(userId),
@@ -39,6 +40,7 @@ export const getUserById = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { username, password, role, articles } = req.body;
+
     const user = await userClient.create({
       data: {
         username,
@@ -65,7 +67,9 @@ export interface ArticleInterface {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
+
     const { username, password, role, articles } = req.body;
+
     const articlesOperations = articles?.map((article: ArticleInterface) => ({
       title: article.title,
       body: article.body,
