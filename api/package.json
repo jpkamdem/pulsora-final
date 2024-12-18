@@ -2,6 +2,7 @@
   "name": "prisma",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx watch src/server.ts",
@@ -20,6 +21,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
-    "express": "^4.21.2"
+    "bcrypt-ts": "^5.0.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }

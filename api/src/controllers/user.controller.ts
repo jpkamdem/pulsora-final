@@ -1,5 +1,20 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { hashPassword } from "../utils/security";
+
+export interface ArticleInterface {
+  title: string;
+  body: string;
+}
+
+type RoleType = "ADMIN" | "USER";
+
+export interface UserInterface {
+  username: string;
+  password: string;
+  role: RoleType;
+  articles: ArticleInterface[];
+}
 
 const userClient = new PrismaClient().user;
 
@@ -39,12 +54,13 @@ export const getUserById = async (req: Request, res: Response) => {
 // createUser
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, password, role, articles } = req.body;
+    const { username, password, role, articles }: UserInterface = req.body;
+    const hashedPassword = hashPassword(password);
 
     const user = await userClient.create({
       data: {
         username,
-        password,
+        password: hashedPassword,
         role: role || "USER",
         articles: {
           create: articles,
@@ -58,17 +74,13 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-export interface ArticleInterface {
-  title: string;
-  body: string;
-}
-
 // updateUser
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
 
-    const { username, password, role, articles } = req.body;
+    const { username, password, role, articles }: UserInterface = req.body;
+    const hashedPassword = hashPassword(password);
 
     const articlesOperations = articles?.map((article: ArticleInterface) => ({
       title: article.title,
@@ -79,7 +91,7 @@ export const updateUser = async (req: Request, res: Response) => {
       where: { id: Number(userId) },
       data: {
         username,
-        password,
+        password: hashedPassword,
         role: role || "USER",
         articles: {
           create: articlesOperations,

@@ -2,6 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { ArticleInterface } from "./user.controller";
 
+interface ArticleInterfaceBis extends ArticleInterface {
+  authorId: number;
+}
+
 const articleClient = new PrismaClient().article;
 
 // getAllArticles
@@ -29,10 +33,6 @@ export const getArticleById = async (req: Request, res: Response) => {
     console.log(e);
   }
 };
-
-interface ArticleInterfaceBis extends ArticleInterface {
-  authorId: number;
-}
 
 // createArticle
 export const createArticle = async (req: Request, res: Response) => {
