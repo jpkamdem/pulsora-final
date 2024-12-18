@@ -8,6 +8,8 @@ RUN npm i
 
 COPY . .
 
+RUN chmod +x ./script.sh
+
 EXPOSE 3000
 
-CMD [ "npx", "prisma", "migrate", "deploy"]
+ENTRYPOINT [ "./script.sh" ]
