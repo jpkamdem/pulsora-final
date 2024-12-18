@@ -56,7 +56,7 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-interface ArticleInterface {
+export interface ArticleInterface {
   title: string;
   body: string;
 }
