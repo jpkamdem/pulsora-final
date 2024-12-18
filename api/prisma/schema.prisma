@@ -18,14 +18,14 @@ model User {
   username String
   password String
   role     Role      @default(USER)
-  articles Article[]
+  articles Article[] @relation("userArticles")
 }
 
 model Article {
   id        Int      @id @default(autoincrement())
   title     String
   body      String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(name: "userArticles", fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime @default(now())
   authorId  Int
 }
