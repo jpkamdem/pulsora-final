@@ -1,0 +1,6 @@
+- git clone `https://github.com/jpkamdem/prisma.git`
+- cd prisma/api
+- npm i && cd ..
+- docker compose up -d
+- npx prisma generate && npx prisma db push
+- cd api/ && npm run dev

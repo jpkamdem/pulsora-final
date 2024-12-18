@@ -56,24 +56,35 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
+interface ArticleInterface {
+  title: string;
+  body: string;
+}
+
 // updateUser
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
     const { username, password, role, articles } = req.body;
-    const user = userClient.update({
+    const articlesOperations = articles?.map((article: ArticleInterface) => ({
+      title: article.title,
+      body: article.body,
+    }));
+
+    const user = await userClient.update({
       where: { id: Number(userId) },
       data: {
         username,
         password,
         role: role || "USER",
         articles: {
-          create: articles,
+          create: articlesOperations,
         },
       },
+      include: { articles: true },
     });
 
-    res.status(201).json({ user });
+    res.status(201).json({ data: user });
   } catch (e) {
     console.log(e);
   }
@@ -83,10 +94,6 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
-
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ error: "L'ID utilisateur est invalide." });
-    }
 
     const user = await userClient.delete({
       where: { id: Number(userId) },
