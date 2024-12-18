@@ -33,7 +33,7 @@ model Article {
 model Team {
   id       Int      @id @default(autoincrement())
   name     String
-  Player   Player[]
+  players  Player[]
   wins     Int
   loses    Int
   homeGame Game[]   @relation("homeTeam")
@@ -41,32 +41,31 @@ model Team {
 }
 
 model Player {
-  id         Int        @id @default(autoincrement())
-  firstname  String
-  lastname   String
-  position   Position
-  number     Int
-  team       Team?      @relation(fields: [teamId], references: [id])
-  teamId     Int
-  status     Incident[]
-  incidentId Int
+  id        Int        @id @default(autoincrement())
+  firstname String
+  lastname  String
+  position  Position
+  number    Int
+  team      Team?      @relation(fields: [teamId], references: [id])
+  teamId    Int
+  incidents Incident[]
+  status    Status
 }
 
 model Game {
-  id        Int  @id @default(autoincrement())
-  homeTeam  Team @relation("homeTeam", fields: [teamOne], references: [id])
-  teamOne   Int
-  awayTeam  Team @relation("awayTeam", fields: [teamTwo], references: [id])
-  teamTwo   Int
-  scoreHome Int
-  scoreAway Int
+  id       Int  @id @default(autoincrement())
+  homeTeam Team @relation("homeTeam", fields: [teamOne], references: [id])
+  teamOne  Int
+  awayTeam Team @relation("awayTeam", fields: [teamTwo], references: [id])
+  teamTwo  Int
+  scoreOne Int
+  scoreTwo Int
 }
 
 model Incident {
-  id     Int      @id @default(autoincrement())
-  type   String
-  status Status
-  Player Player[]
+  id      Int      @id @default(autoincrement())
+  type    String
+  players Player[]
 }
 
 enum Role {

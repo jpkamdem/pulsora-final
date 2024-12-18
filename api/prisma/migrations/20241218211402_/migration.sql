@@ -46,7 +46,7 @@ CREATE TABLE "Player" (
     "position" "Position" NOT NULL,
     "number" INTEGER NOT NULL,
     "teamId" INTEGER NOT NULL,
-    "incidentId" INTEGER NOT NULL,
+    "status" "Status" NOT NULL,
 
     CONSTRAINT "Player_pkey" PRIMARY KEY ("id")
 );
@@ -56,8 +56,8 @@ CREATE TABLE "Game" (
     "id" SERIAL NOT NULL,
     "teamOne" INTEGER NOT NULL,
     "teamTwo" INTEGER NOT NULL,
-    "scoreHome" INTEGER NOT NULL,
-    "scoreAway" INTEGER NOT NULL,
+    "scoreOne" INTEGER NOT NULL,
+    "scoreTwo" INTEGER NOT NULL,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
@@ -66,7 +66,6 @@ CREATE TABLE "Game" (
 CREATE TABLE "Incident" (
     "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
-    "status" "Status" NOT NULL,
 
     CONSTRAINT "Incident_pkey" PRIMARY KEY ("id")
 );
@@ -83,7 +82,7 @@ CREATE TABLE "_IncidentToPlayer" (
 CREATE INDEX "_IncidentToPlayer_B_index" ON "_IncidentToPlayer"("B");
 
 -- AddForeignKey
-ALTER TABLE "Article" ADD CONSTRAINT "Article_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Article" ADD CONSTRAINT "Article_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Player" ADD CONSTRAINT "Player_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

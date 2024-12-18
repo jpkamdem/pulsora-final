@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Article, PrismaClient, Role } from "@prisma/client";
 import { Request, Response } from "express";
 import { hashPassword } from "../utils/security";
 
@@ -7,13 +7,11 @@ export interface ArticleInterface {
   body: string;
 }
 
-type RoleType = "ADMIN" | "USER";
-
 export interface UserInterface {
   username: string;
   password: string;
-  role: RoleType;
-  articles: ArticleInterface[];
+  role: Role;
+  articles: Article[];
 }
 
 const userClient = new PrismaClient().user;
