@@ -1,6 +1,24 @@
-- git clone `https://github.com/jpkamdem/prisma.git`
-- cd prisma/api
-- npm i && cd ..
+# REST API
+
+Projet étudiant
+
+### Stack
+
+- Docker
+- Typescript
+- Express.js
+- Prisma
+<hr />
+
+### Développement
+
+- cd prisma/api/
+- npm i
 - docker compose up -d
-- npx prisma generate && npx prisma db push
-- cd api/ && npm run dev
+- npx prisma db push
+- npm run dev
+
+### Production
+
+- cd prisma/
+- docker compose up --wait
