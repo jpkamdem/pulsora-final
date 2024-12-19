@@ -6,6 +6,7 @@ export interface GameInterface {
   awayTeamId: number;
   homeScore: number;
   awayScore: number;
+  date: Date;
 }
 
 const gameClient = new PrismaClient().game;
@@ -61,6 +62,7 @@ export const createGame = async (req: Request, res: Response) => {
         homeScore: Math.floor(Math.random() * 6),
         awayTeamId,
         awayScore: Math.floor(Math.random() * 6),
+        date: new Date(),
       },
     });
 
@@ -94,6 +96,7 @@ export const updateGame = async (req: Request, res: Response) => {
         homeScore: Math.floor(Math.random() * 6),
         awayTeamId,
         awayScore: Math.floor(Math.random() * 6),
+        date: new Date(),
       },
     });
 

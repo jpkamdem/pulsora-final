@@ -53,13 +53,14 @@ model Player {
 }
 
 model Game {
-  id         Int  @id @default(autoincrement())
-  teamOne    Team @relation("teamOne", fields: [homeTeamId], references: [id])
+  id         Int      @id @default(autoincrement())
+  teamOne    Team     @relation("teamOne", fields: [homeTeamId], references: [id])
   homeTeamId Int
-  teamTwo    Team @relation("teamTwo", fields: [awayTeamId], references: [id])
+  teamTwo    Team     @relation("teamTwo", fields: [awayTeamId], references: [id])
   awayTeamId Int
   homeScore  Int
   awayScore  Int
+  date       DateTime @default(now())
 }
 
 model Incident {

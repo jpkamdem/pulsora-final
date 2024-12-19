@@ -58,6 +58,7 @@ CREATE TABLE "Game" (
     "awayTeamId" INTEGER NOT NULL,
     "homeScore" INTEGER NOT NULL,
     "awayScore" INTEGER NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
