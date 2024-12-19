@@ -13,6 +13,6 @@ playerRouter.get("/", getAllPlayers);
 playerRouter.get("/:id", getPlayerById);
 playerRouter.post("/", createPlayer);
 playerRouter.put("/:id", updatePlayer);
-playerRouter.delete("/", deletePlayer);
+playerRouter.delete("/:id", deletePlayer);
 
 export default playerRouter;
