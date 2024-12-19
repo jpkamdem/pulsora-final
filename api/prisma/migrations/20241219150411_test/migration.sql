@@ -5,7 +5,7 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 CREATE TYPE "Position" AS ENUM ('GK', 'DEF', 'MF', 'FW');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('Suspendu', 'Blessé', 'Opérationnel');
+CREATE TYPE "Status" AS ENUM ('Suspendu', 'Blessé', 'Opérationnel', 'Inconnu');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -45,7 +45,7 @@ CREATE TABLE "Player" (
     "lastname" TEXT NOT NULL,
     "position" "Position" NOT NULL,
     "number" INTEGER NOT NULL,
-    "teamId" INTEGER NOT NULL,
+    "teamId" INTEGER,
     "status" "Status" NOT NULL,
 
     CONSTRAINT "Player_pkey" PRIMARY KEY ("id")
@@ -54,10 +54,10 @@ CREATE TABLE "Player" (
 -- CreateTable
 CREATE TABLE "Game" (
     "id" SERIAL NOT NULL,
-    "teamOne" INTEGER NOT NULL,
-    "teamTwo" INTEGER NOT NULL,
-    "scoreOne" INTEGER NOT NULL,
-    "scoreTwo" INTEGER NOT NULL,
+    "homeTeamId" INTEGER NOT NULL,
+    "awayTeamId" INTEGER NOT NULL,
+    "homeScore" INTEGER NOT NULL,
+    "awayScore" INTEGER NOT NULL,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
@@ -85,13 +85,13 @@ CREATE INDEX "_IncidentToPlayer_B_index" ON "_IncidentToPlayer"("B");
 ALTER TABLE "Article" ADD CONSTRAINT "Article_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Player" ADD CONSTRAINT "Player_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Player" ADD CONSTRAINT "Player_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Game" ADD CONSTRAINT "Game_teamOne_fkey" FOREIGN KEY ("teamOne") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Game" ADD CONSTRAINT "Game_homeTeamId_fkey" FOREIGN KEY ("homeTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Game" ADD CONSTRAINT "Game_teamTwo_fkey" FOREIGN KEY ("teamTwo") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Game" ADD CONSTRAINT "Game_awayTeamId_fkey" FOREIGN KEY ("awayTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_IncidentToPlayer" ADD CONSTRAINT "_IncidentToPlayer_A_fkey" FOREIGN KEY ("A") REFERENCES "Incident"("id") ON DELETE CASCADE ON UPDATE CASCADE;

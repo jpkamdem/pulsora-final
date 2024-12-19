@@ -8,8 +8,8 @@ export interface TeamInterface {
   wins: number;
   loses: number;
   players?: PlayerInterface[];
-  homeGame?: GameInterface[];
-  awayGame?: GameInterface[];
+  homeGames?: GameInterface[];
+  awayGames?: GameInterface[];
 }
 
 const teamClient = new PrismaClient().team;
@@ -20,8 +20,8 @@ export const getAllTeams = async (req: Request, res: Response) => {
     const allTeams = await teamClient.findMany({
       include: {
         players: true,
-        homeGame: true,
-        awayGame: true,
+        homeGames: true,
+        awayGames: true,
       },
     });
 
@@ -35,9 +35,19 @@ export const getAllTeams = async (req: Request, res: Response) => {
 export const getTeamById = async (req: Request, res: Response) => {
   try {
     const teamId = req.params.id;
+    const teamIdValidation = !teamId || isNaN(Number(teamId));
+    if (teamIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", teamId });
+      return;
+    }
 
     const team = await teamClient.findUnique({
       where: { id: Number(teamId) },
+      include: {
+        players: true,
+        homeGames: true,
+        awayGames: true,
+      },
     });
 
     res.status(200).json({ data: team });
@@ -49,39 +59,24 @@ export const getTeamById = async (req: Request, res: Response) => {
 // createTeam
 export const createTeam = async (req: Request, res: Response) => {
   try {
-    const { name, wins, loses, players, homeGame, awayGame }: TeamInterface =
+    const { name, wins, loses, players, homeGames, awayGames }: TeamInterface =
       req.body;
+
+    const teamBodyValidation =
+      !name || wins === undefined || loses === undefined;
+    if (teamBodyValidation) {
+      res.status(404).json({ message: "Veuillez compléter tous les champs" });
+      return;
+    }
 
     const team = await teamClient.create({
       data: {
         name,
         wins,
         loses,
-        players: {
-          create: players?.map((player) => ({
-            firstname: player.firstname,
-            lastname: player.lastname,
-            position: player.position,
-            number: player.number,
-            status: player.status,
-          })),
-        },
-        homeGame: {
-          create: homeGame?.map((game) => ({
-            teamOne: game.teamOne.id,
-            teamTwo: game.teamTwo.id,
-            scoreOne: game.scoreOne,
-            scoreTwo: game.scoreTwo,
-          })),
-        },
-        awayGame: {
-          create: awayGame?.map((game) => ({
-            teamOne: game.teamOne.id,
-            teamTwo: game.teamTwo.id,
-            scoreOne: game.scoreOne,
-            scoreTwo: game.scoreTwo,
-          })),
-        },
+        players: undefined,
+        homeGames: undefined,
+        awayGames: undefined,
       },
     });
 
@@ -92,5 +87,51 @@ export const createTeam = async (req: Request, res: Response) => {
 };
 
 // updateTeam
+export const updateTeam = async (req: Request, res: Response) => {
+  try {
+    const teamId = req.params.id;
+    const teamIdValidation = !teamId || isNaN(Number(teamId));
+    if (teamIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", teamId });
+      return;
+    }
+
+    const { name, wins, loses, players, homeGames, awayGames }: TeamInterface =
+      req.body;
+
+    const team = await teamClient.update({
+      where: { id: Number(teamId) },
+      data: {
+        name,
+        wins,
+        loses,
+        players: undefined,
+        homeGames: undefined,
+        awayGames: undefined,
+      },
+    });
+
+    res.status(200).json({ data: team });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 // deleteTeam
+export const deleteTeam = async (req: Request, res: Response) => {
+  try {
+    const teamId = req.params.id;
+    const teamIdValidation = !teamId || isNaN(Number(teamId));
+    if (teamIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", teamId });
+      return;
+    }
+
+    const team = await teamClient.delete({
+      where: { id: Number(teamId) },
+    });
+    res.status(204).json({ data: team });
+  } catch (e) {
+    console.log(e);
+  }
+};

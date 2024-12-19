@@ -25,19 +25,19 @@ model Article {
   id        Int      @id @default(autoincrement())
   title     String
   body      String
-  author    User     @relation(name: "userArticles", fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  author    User     @relation("userArticles", fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime @default(now())
   authorId  Int
 }
 
 model Team {
-  id       Int      @id @default(autoincrement())
-  name     String
-  players  Player[]
-  wins     Int
-  loses    Int
-  homeGame Game[]   @relation("homeTeam")
-  awayGame Game[]   @relation("awayTeam")
+  id        Int      @id @default(autoincrement())
+  name      String
+  players   Player[]
+  wins      Int
+  loses     Int
+  homeGames Game[]   @relation("teamOne")
+  awayGames Game[]   @relation("teamTwo")
 }
 
 model Player {
@@ -46,20 +46,20 @@ model Player {
   lastname  String
   position  Position
   number    Int
-  team      Team?      @relation(fields: [teamId], references: [id])
-  teamId    Int
+  team      Team?      @relation(fields: [teamId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teamId    Int?
   incidents Incident[]
   status    Status
 }
 
 model Game {
-  id       Int  @id @default(autoincrement())
-  homeTeam Team @relation("homeTeam", fields: [teamOne], references: [id])
-  teamOne  Int
-  awayTeam Team @relation("awayTeam", fields: [teamTwo], references: [id])
-  teamTwo  Int
-  scoreOne Int
-  scoreTwo Int
+  id         Int  @id @default(autoincrement())
+  teamOne    Team @relation("teamOne", fields: [homeTeamId], references: [id])
+  homeTeamId Int
+  teamTwo    Team @relation("teamTwo", fields: [awayTeamId], references: [id])
+  awayTeamId Int
+  homeScore  Int
+  awayScore  Int
 }
 
 model Incident {
@@ -84,4 +84,5 @@ enum Status {
   Suspendu
   Blessé
   Opérationnel
+  Inconnu
 }

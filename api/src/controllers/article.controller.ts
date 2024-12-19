@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { ArticleInterface } from "./user.controller";
+
+export interface ArticleInterface {
+  title: string;
+  body: string;
+}
 
 interface ArticleInterfaceBis extends ArticleInterface {
   authorId: number;
@@ -23,6 +27,10 @@ export const getAllArticles = async (req: Request, res: Response) => {
 export const getArticleById = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+    const articleIdValidation = !articleId || isNaN(Number(articleId));
+    if (articleIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", articleId });
+    }
 
     const article = await articleClient.findUnique({
       where: { id: Number(articleId) },
@@ -57,6 +65,10 @@ export const createArticle = async (req: Request, res: Response) => {
 export const updateArticle = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+    const articleIdValidation = !articleId || isNaN(Number(articleId));
+    if (articleIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", articleId });
+    }
 
     const { title, body, authorId }: ArticleInterfaceBis = req.body;
 
@@ -69,7 +81,7 @@ export const updateArticle = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(201).json({ data: article });
+    res.status(200).json({ data: article });
   } catch (e) {
     console.log(e);
   }
@@ -79,12 +91,16 @@ export const updateArticle = async (req: Request, res: Response) => {
 export const deleteArticle = async (req: Request, res: Response) => {
   try {
     const articleId = req.params.id;
+    const articleIdValidation = !articleId || isNaN(Number(articleId));
+    if (articleIdValidation) {
+      res.status(404).json({ message: "ID invalide : ", articleId });
+    }
 
     const article = await articleClient.delete({
       where: { id: Number(articleId) },
     });
 
-    res.json(201).json({ data: article });
+    res.json(204).json({ data: article });
   } catch (e) {
     console.log(e);
   }
