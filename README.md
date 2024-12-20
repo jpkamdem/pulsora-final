@@ -18,6 +18,8 @@ Projet étudiant d'application de gestion d'un club sportif
 
 Tout le projet est réalisé avec TypeScript
 
+Ce repo était initialement destiné à l'API. L'interface web présente vient d'un autre repo. [Voir.](https://github.com/darryl-sangare/pulsora.git)
+
 ## Déploiement
 
 #### Prérequis
