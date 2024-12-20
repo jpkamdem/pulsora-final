@@ -62,8 +62,7 @@ export const createTeam = async (req: Request, res: Response) => {
     const { name, wins, loses, players, homeGames, awayGames }: TeamInterface =
       req.body;
 
-    const teamBodyValidation =
-      !name || wins === undefined || loses === undefined;
+    const teamBodyValidation = !name;
     if (teamBodyValidation) {
       res.status(404).json({ message: "Veuillez compléter tous les champs" });
       return;
