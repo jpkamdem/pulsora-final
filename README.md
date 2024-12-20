@@ -25,7 +25,7 @@ Tout le projet est réalisé avec TypeScript
 - Docker
 - Node
 
-Créer 2 fichiers .env identiques, l'un à la racine prisma/, l'autre à l'emplacement prisma/api/ et collez ceci à l'intérieur :
+Créez 2 fichiers .env identiques, l'un à la racine prisma/, l'autre à l'emplacement prisma/api/ et collez-y ceci :
 
 ```env
 POSTGRES_DB=mydb
@@ -63,4 +63,4 @@ Si les données ne sont pas chargées convenablement, veuillez écrire la comman
 docker compose restart api
 ```
 
-La base de donnée a besoin de quelques secondes avant de pouvoir être disponible, il est possible que l'API démarre trop rapidement. Ce cas de figure peut arriver si vous privilégiez de construire et de lancer les images séparément. Il est vivement recommandé de se tenir aux commandes présentées ci-dessus.
+La base de donnée a besoin de quelques secondes avant de pouvoir être disponible, il est possible que l'API démarre trop rapidement. Ce cas de figure peut arriver si vous privilégiez de construire et de lancer les images séparément. Je vous recommande de vous tenir aux commandes présentées ci-dessus.
