@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { updateTeamScore } from "./team.controller";
 
 export interface GameInterface {
   homeTeamId: number;
@@ -56,15 +57,29 @@ export const createGame = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Veuillez compléter tous les champs" });
       return;
     }
+
+    const homeScore = Math.floor(Math.random() * 6);
+    const awayScore = Math.floor(Math.random() * 6);
+
     const game = await gameClient.create({
       data: {
         homeTeamId,
-        homeScore: Math.floor(Math.random() * 6),
+        homeScore: homeScore,
         awayTeamId,
-        awayScore: Math.floor(Math.random() * 6),
+        awayScore: awayScore,
         date: new Date(),
       },
     });
+
+    if (homeScore > awayScore) {
+      await updateTeamScore(homeTeamId, 1, 0);
+      await updateTeamScore(awayTeamId, 0, 1);
+    } else if (homeScore < awayScore) {
+      await updateTeamScore(awayTeamId, 1, 0);
+      await updateTeamScore(homeTeamId, 0, 1);
+    } else {
+      console.log("Match nul, aucune mise à jour");
+    }
 
     res.status(200).json({ data: game });
   } catch (e) {

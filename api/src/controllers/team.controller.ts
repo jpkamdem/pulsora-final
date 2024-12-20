@@ -117,6 +117,20 @@ export const updateTeam = async (req: Request, res: Response) => {
   }
 };
 
+export const updateTeamScore = async (
+  teamId: number,
+  wins: number,
+  loses: number
+) => {
+  return await teamClient.update({
+    where: { id: teamId },
+    data: {
+      wins: { increment: wins },
+      loses: { increment: loses },
+    },
+  });
+};
+
 // deleteTeam
 export const deleteTeam = async (req: Request, res: Response) => {
   try {

@@ -32,8 +32,8 @@ CREATE TABLE "Article" (
 CREATE TABLE "Team" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "wins" INTEGER NOT NULL,
-    "loses" INTEGER NOT NULL,
+    "wins" INTEGER NOT NULL DEFAULT 0,
+    "loses" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
 );
