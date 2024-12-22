@@ -10,7 +10,9 @@
     "strict": true,
     "alwaysStrict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": "types",
+    "typeRoots": ["types"]
   },
   "include": ["**/*"]
 }

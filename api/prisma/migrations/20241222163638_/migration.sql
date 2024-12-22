@@ -80,6 +80,9 @@ CREATE TABLE "_IncidentToPlayer" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
 CREATE INDEX "_IncidentToPlayer_B_index" ON "_IncidentToPlayer"("B");
 
 -- AddForeignKey

@@ -1,13 +1,13 @@
 import { Article, PrismaClient, Role } from "@prisma/client";
 import { Request, Response } from "express";
-import { hashPassword } from "../utils/security";
-import { ArticleInterface } from "./article.controller";
+import { hashPassword } from "../middlewares/security";
+import { compareSync } from "bcrypt-ts";
 
 export interface UserInterface {
   username: string;
   password: string;
   role: Role;
-  articles: Article[];
+  articles?: Article[];
 }
 
 const userClient = new PrismaClient().user;
@@ -45,37 +45,6 @@ export const getUserById = async (req: Request, res: Response) => {
     });
 
     res.status(200).json({ data: user });
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-// createUser
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { username, password, role, articles }: Partial<UserInterface> =
-      req.body;
-
-    const userBodyValidation = !username || !password || !role;
-    if (userBodyValidation) {
-      res.status(404).json({ message: "Veuillez compléter tous les champs" });
-      return;
-    }
-
-    const pw = password as string;
-    const psd = username as string;
-    const hashedPassword = hashPassword(pw);
-
-    const user = await userClient.create({
-      data: {
-        username: psd,
-        password: hashedPassword,
-        role: role || "USER",
-        articles: articles?.length ? { create: articles } : undefined,
-      },
-    });
-
-    res.status(201).json({ data: user });
   } catch (e) {
     console.log(e);
   }
