@@ -1,4 +1,5 @@
-[test](./livrables/class_diagram.drawio.png)
+- [Diagramme des classes](./livrables/class_diagram.drawio.svg)
+- [Modèle physique des données](./livrables//physical_data_model.drawio.svg)
 
 # REST API
 
