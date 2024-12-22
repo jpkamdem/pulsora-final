@@ -95,7 +95,10 @@ Selon la méthode de déploiement que vous choisirez, veuillez modifier la varia
 #### Développement
 
 ```bash
-cd pulsora-final/api/
+cd pulsora-final/web
+npm i
+npm run dev
+cd ../pulsora-final/api/
 npm i
 docker compose up -d
 npx prisma db push
