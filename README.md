@@ -1,4 +1,4 @@
-![screenshot](/web/src/assets/pulsora-logo.png)
+![screenshot](/livrables/pulsora-1.png)
 
 ### Auteur : jpkamdem
 
