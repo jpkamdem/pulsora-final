@@ -78,7 +78,7 @@ Ce repo était initialement destiné à l'API. L'interface web présente vient d
 - Docker
 - Node.js
 
-Créez 2 fichiers .env identiques, l'un à la racine prisma/, l'autre à l'emplacement prisma/api/ et collez-y ceci :
+Créez 2 fichiers .env identiques, l'un à la racine pulsora-final/, l'autre à l'emplacement pulsora-final/api/ et collez-y ceci :
 
 ```env
 POSTGRES_DB=mydb
@@ -95,7 +95,7 @@ Selon la méthode de déploiement que vous choisirez, veuillez modifier la varia
 #### Développement
 
 ```bash
-cd prisma/api/
+cd pulsora-final/api/
 npm i
 docker compose up -d
 npx prisma db push
@@ -105,7 +105,7 @@ npm run dev
 #### Production
 
 ```bash
-cd prisma/
+cd pulsora-final/
 docker compose up --wait
 ```
 
