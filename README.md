@@ -1,3 +1,5 @@
+[test](./livrables/class_diagram.drawio.png)
+
 # REST API
 
 Projet étudiant d'application de gestion d'un club sportif
