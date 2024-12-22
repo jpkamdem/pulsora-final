@@ -67,6 +67,8 @@ export async function login(user: LoginCredentials) {
       { expiresIn: 1800000 }
     );
 
+    console.log("Token généré : ", token);
+
     return { id: foundUser.id, name: foundUser.username, token };
   } catch (err) {
     throw err;

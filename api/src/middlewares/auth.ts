@@ -4,32 +4,27 @@ import { Request, Response, NextFunction } from "express";
 
 export const SECRET_KEY: Secret = "firstnameBunchOfNumbers4894616";
 
-export interface CustomRequest extends Request {
-  token: string | JwtPayload;
-}
+export async function auth(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  console.log("Authorization header : ", authHeader);
 
-export const auth = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authorizationHeader = req.headers.authorization;
-    console.log("Authorization header: ", authorizationHeader);
+  const token = authHeader?.split(" ")[1];
+  console.log("Token extrait : ", token);
 
-    if (!authorizationHeader) {
-      res.status(401).json({ message: "Token manquant. Authentifie-toi" });
-      return;
-    }
-
-    const token = authorizationHeader?.replace("Bearer ", "");
-    console.log("Token extrait : ", token);
-
-    if (!token) {
-      throw new Error();
-    }
-
-    const decoded = jwt.verify(token, SECRET_KEY);
-    (req as CustomRequest).token = decoded;
-
-    next();
-  } catch (e) {
-    res.status(401).send("Token manquant. Authentifie-toi");
+  if (!token) {
+    console.log("Token non fourni");
+    res.status(401).json({ message: "Accès non autorisé, auth" });
+    return;
   }
-};
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    console.log("Token décodé : ", decoded);
+    req.token = decoded;
+    next();
+  } catch (err) {
+    console.log("Erreur de vérification du token : ", err);
+    res.status(401).json({ message: "Token invalide, auth 2" });
+    return;
+  }
+}
