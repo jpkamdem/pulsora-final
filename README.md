@@ -100,7 +100,7 @@ npm i
 npm run dev
 cd ../api/
 npm i
-docker compose up -d
+docker compose up --wait db
 npx prisma db push
 npm run dev
 ```
