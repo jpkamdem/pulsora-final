@@ -10,7 +10,16 @@ export interface CustomRequest extends Request {
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
+    const authorizationHeader = req.headers.authorization;
+    console.log("Authorization header: ", authorizationHeader);
+
+    if (!authorizationHeader) {
+      res.status(401).json({ message: "Token manquant. Authentifie-toi" });
+      return;
+    }
+
+    const token = authorizationHeader?.replace("Bearer ", "");
+    console.log("Token extrait : ", token);
 
     if (!token) {
       throw new Error();
@@ -21,6 +30,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     next();
   } catch (e) {
-    res.status(401).send("Authentifie-toi");
+    res.status(401).send("Token manquant. Authentifie-toi");
   }
 };

@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import { compareSync } from "bcrypt-ts";
 import { Request, Response } from "express";
-import { UserInterface } from "./user.controller";
 import { getErrorMessage, hashPassword } from "../middlewares/security";
 import { SECRET_KEY } from "../middlewares/auth";
 import * as jwt from "jsonwebtoken";
@@ -9,110 +8,77 @@ import * as jwt from "jsonwebtoken";
 interface LoginCredentials {
   username: string;
   password: string;
+  role?: Role;
 }
 
 const prisma = new PrismaClient();
 
-export const register = async (req: Request, res: Response) => {
+export async function register(user: LoginCredentials) {
   try {
-    const { username, password, role, articles }: Partial<UserInterface> =
-      req.body;
-
-    const userBodyValidation = !username || !password || !role;
-    if (userBodyValidation) {
-      res.status(404).json({ message: "Veuillez compléter tous les champs" });
-      return;
-    }
-
-    const pw = password as string;
-    const psd = username as string;
-    const hashedPassword = hashPassword(pw);
-
-    const checkUsername = await prisma.user.findUnique({
-      where: { username },
+    const checkUsername = await prisma.user.findFirst({
+      where: { username: user.username },
     });
 
     if (checkUsername) {
-      res
-        .status(404)
-        .json({ message: `L'utilisateur ${username} existe déjà` });
-      return;
+      throw new Error("Le nom d'utilisateur existe déjà");
     }
 
-    const user = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
-        username: psd,
-        password: hashedPassword,
-        role: role || "USER",
-        articles: undefined,
+        username: user.username,
+        password: hashPassword(user.password),
+        role: user.role || "USER",
       },
     });
-
-    res.status(201).json({ data: user });
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    throw err;
   }
-};
+}
 
-export const login = async (req: Request, res: Response) => {
+export async function registerOne(req: Request, res: Response) {
   try {
-    const { username, password }: LoginCredentials = req.body;
+    const newUser = await register(req.body);
+    res.status(201).json({ message: "Création d'utilisateur réussie" });
+  } catch (err) {
+    res.status(500).json({ message: getErrorMessage(err) });
+    return;
+  }
+}
 
-    const userBodyValidation = !username || !password;
-    if (userBodyValidation) {
-      res.status(404).json({ message: "Veuillez compléter tous les champs" });
-      return;
-    }
-
-    if (typeof username !== "string") {
-      res
-        .status(404)
-        .json({ message: "Entre une valeur correcte pour l'username" });
-      return;
-    }
-
-    if (typeof password !== "string") {
-      res
-        .status(404)
-        .json({ message: "Entre une valeur correcte pour le password" });
-      return;
-    }
-
-    const checkUsername = await prisma.user.findUnique({
-      where: { username },
+export async function login(user: LoginCredentials) {
+  try {
+    const foundUser = await prisma.user.findFirst({
+      where: { username: user.username },
     });
 
-    if (!checkUsername) {
-      res
-        .status(404)
-        .json({ message: `L'utilisateur ${username} n'existe pas` });
-      return;
+    if (!foundUser) {
+      throw new Error(`L'utilisateur ${user.username} n'existe pas`);
     }
 
-    const checkPassword = compareSync(password, checkUsername?.password);
+    const checkPassword = compareSync(user.password, foundUser.password);
 
     if (!checkPassword) {
-      res.status(404).json({ message: "Mot de passe incorrect" });
-      return;
+      throw new Error("Le mot de passe n'est pas correct");
     }
 
-    // handleConnection
     const token = jwt.sign(
-      { id: checkUsername.id, name: checkUsername.username },
+      { id: foundUser.id, name: foundUser.username, role: foundUser.role },
       SECRET_KEY,
-      { expiresIn: "1800000" }
+      { expiresIn: 1800000 }
     );
 
-    res.status(200).json({
-      message: `Vous êtes authentifié en tant que ${checkUsername.username}`,
-      user: {
-        id: checkUsername.id,
-        name: checkUsername.username,
-        role: checkUsername.role,
-      },
-      token,
-    });
-  } catch (e) {
-    console.log(e);
+    return { id: foundUser.id, name: foundUser.username, token };
+  } catch (err) {
+    throw err;
   }
-};
+}
+
+export async function loginOne(req: Request, res: Response) {
+  try {
+    const foundUser = await login(req.body);
+    res.status(200).json(foundUser);
+  } catch (err) {
+    res.status(500).json({ message: getErrorMessage(err) });
+    return;
+  }
+}
