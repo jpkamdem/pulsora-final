@@ -7,11 +7,14 @@ import incidentRouter from "./routes/incident.routes";
 import playerRouter from "./routes/player.routes";
 import gameRouter from "./routes/game.routes";
 import connectionRouter from "./routes/connection.routes";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+
+app.use(cookieParser());
 
 app.use(express.json());
 

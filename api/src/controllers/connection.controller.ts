@@ -37,7 +37,7 @@ export async function register(user: LoginCredentials) {
 
 export async function registerOne(req: Request, res: Response) {
   try {
-    const newUser = await register(req.body);
+    await register(req.body);
     res.status(201).json({ message: "Création d'utilisateur réussie" });
   } catch (err) {
     res.status(500).json({ message: getErrorMessage(err) });
@@ -58,18 +58,25 @@ export async function login(user: LoginCredentials) {
     const checkPassword = compareSync(user.password, foundUser.password);
 
     if (!checkPassword) {
-      throw new Error("Le mot de passe n'est pas correct");
+      throw new Error(
+        `Le mot de passe ne correspond pas à l'utilisateur ${user.username}`
+      );
     }
 
     const token = jwt.sign(
-      { id: foundUser.id, name: foundUser.username, role: foundUser.role },
+      { id: foundUser.id, username: foundUser.username },
       SECRET_KEY,
-      { expiresIn: 1800000 }
+      { expiresIn: "10min" }
     );
 
-    console.log("Token généré : ", token);
-
-    return { id: foundUser.id, name: foundUser.username, token };
+    return {
+      user: {
+        id: foundUser.id,
+        username: foundUser.username,
+        role: foundUser.role,
+      },
+      token,
+    };
   } catch (err) {
     throw err;
   }
@@ -78,6 +85,11 @@ export async function login(user: LoginCredentials) {
 export async function loginOne(req: Request, res: Response) {
   try {
     const foundUser = await login(req.body);
+    res.cookie("token", foundUser.token, {
+      httpOnly: true,
+      secure: true,
+    });
+
     res.status(200).json(foundUser);
   } catch (err) {
     res.status(500).json({ message: getErrorMessage(err) });

@@ -2,29 +2,38 @@ import * as jwt from "jsonwebtoken";
 import { Secret, JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
+export interface CustomRequest extends Request {
+  user?: JwtPayload;
+}
+
 export const SECRET_KEY: Secret = "firstnameBunchOfNumbers4894616";
 
-export async function auth(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization;
-  console.log("Authorization header : ", authHeader);
-
-  const token = authHeader?.split(" ")[1];
-  console.log("Token extrait : ", token);
-
-  if (!token) {
-    console.log("Token non fourni");
-    res.status(401).json({ message: "Accès non autorisé, auth" });
-    return;
-  }
-
+export async function auth(
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    console.log("Token décodé : ", decoded);
-    req.token = decoded;
+    const token = req.cookies.token;
+
+    if (!token) {
+      res.status(401).json({ message: "Accès non autorisé, token manquant" });
+      return;
+    }
+
+    const user = jwt.verify(token, SECRET_KEY);
+
+    if (typeof user === "object" && user !== null) {
+      req.user = user;
+    } else {
+      res.clearCookie("token");
+      res.status(401).json({ message: "Token invalide ou expiré" });
+      return;
+    }
+
     next();
   } catch (err) {
-    console.log("Erreur de vérification du token : ", err);
-    res.status(401).json({ message: "Token invalide, auth 2" });
-    return;
+    res.clearCookie("token");
+    res.status(401).json({ message: "Token invalide ou expiré" });
   }
 }

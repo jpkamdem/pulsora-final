@@ -30,15 +30,22 @@ export const getArticleById = async (req: Request, res: Response) => {
     const articleIdValidation = !articleId || isNaN(Number(articleId));
     if (articleIdValidation) {
       res.status(404).json({ message: "ID invalide : ", articleId });
+      return;
     }
 
     const article = await articleClient.findUnique({
       where: { id: Number(articleId) },
     });
 
+    if (!article) {
+      res.status(404).json({ message: "Article non trouvé" });
+      return;
+    }
+
     res.status(200).json({ data: article });
+    return;
   } catch (e) {
-    console.log(e);
+    res.status(404).json({ message: "Erreur interne du serveur" });
   }
 };
 
