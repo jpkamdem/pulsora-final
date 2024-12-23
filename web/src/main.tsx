@@ -13,6 +13,9 @@ import Gerer from "./pages/Gerer";
 import GererJoueur from "./pages/GererJoueur";
 import GererArticle from "./pages/GererArticle";
 import GererEquipe from "./pages/GererEquipe";
+import CreerArticle from "./pages/CreerArticles";
+import ModifierArticle from "./pages/ModifierArticle";
+import SupprimerArticle from "./pages/SupprimerArticle";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +53,20 @@ const router = createBrowserRouter([
           {
             path: "article",
             element: <GererArticle />,
+            children: [
+              {
+                path: "creer",
+                element: <CreerArticle />,
+              },
+              {
+                path: "modifier",
+                element: <ModifierArticle />,
+              },
+              {
+                path: "supprimer",
+                element: <SupprimerArticle />,
+              },
+            ],
           },
           {
             path: "joueur",

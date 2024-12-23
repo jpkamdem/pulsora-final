@@ -35,6 +35,11 @@ export default function GenerateGame() {
   const generateGame = async () => {
     const url = "http://localhost:3000/games";
 
+    if (teamsData.length <= 1) {
+      setMessage("Il n'y a pas assez d'équipes pour simuler une rencontre");
+      return;
+    }
+
     let homeTeamId = Math.floor(Math.random() * teamsData.length + 1);
     let awayTeamId: number;
     do {
