@@ -1,23 +1,26 @@
 import { Link, Outlet } from "react-router-dom";
 
-export default function Gerer() {
+export default function Profil() {
   return (
     <>
+      <section>
+        <p>Username : test</p>
+      </section>
       <div className="p-8">
         <ul className="flex justify-around">
-          <Link to="/gerer/article">
+          <Link to="/profil/articles">
             <li className="p-8 font-bold border-r-4 border-r-slate-800 hover:bg-slate-600 hover:text-white">
               Gestion des articles
             </li>
           </Link>
 
-          <Link to="/gerer/equipe">
+          <Link to="/profil/equipes">
             <li className="p-8 font-bold border-r-4 border-r-slate-800 hover:bg-slate-600 hover:text-white">
               Gestion des équipes
             </li>
           </Link>
 
-          <Link to="/gerer/joueur">
+          <Link to="/profil/joueurs">
             <li className="p-8 font-bold border-r-4 border-r-slate-800 hover:bg-slate-600 hover:text-white">
               Gestion des joueurs
             </li>

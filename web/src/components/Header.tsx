@@ -43,72 +43,71 @@ export default function Header() {
       </header>
 
       <header className="hidden lg:flex bg-white shadow-md border-b border-gray-200">
-        <div className="container mx-auto flex items-center justify-between">
-          <ul>
-            <img src={pulsoraOne} alt="Logo Pulsora" className="w-10 h-11" />
-          </ul>
+        <div className="container mx-auto">
+          <ul className="flex items-center justify-between">
+            <li>
+              <img src={pulsoraOne} alt="Logo Pulsora" className="w-10 h-11" />
+            </li>
 
-          <ul>
-            <Link
-              to="/"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
-            >
-              ACCUEIL
-            </Link>
-          </ul>
+            <li>
+              <Link
+                to="/"
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                ACCUEIL
+              </Link>
+            </li>
 
-          <ul>
-            <Link
-              to="gerer"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded uppercase"
-            >
-              Gérer
+            <Link to="/authentification">
+              <li className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded uppercase">
+                Authentification
+              </li>
             </Link>
-          </ul>
 
-          <ul>
-            <Link
-              to="/articles"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
-            >
-              ARTICLES
-            </Link>
-          </ul>
+            <li>
+              <Link
+                to="/articles"
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                ARTICLES
+              </Link>
+            </li>
 
-          <ul>
-            <Link
-              to="/saison"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
-            >
-              SAISON
-            </Link>
-          </ul>
+            <li>
+              <Link
+                to="/saison"
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                SAISON
+              </Link>
+            </li>
 
-          <ul>
-            <Link
-              to="/equipe"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
-            >
-              EQUIPE
-            </Link>
-          </ul>
+            <li>
+              <Link
+                to="/equipe"
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                EQUIPE
+              </Link>
+            </li>
 
-          <ul>
-            <Link
-              to="/contact"
-              className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
-            >
-              CONTACT
-            </Link>
-          </ul>
+            <li>
+              <Link
+                to="/contact"
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                CONTACT
+              </Link>
+            </li>
 
-          <ul>
-            <Link
-              to="/compte"
-              className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded"
-            >
-              <img src={userIcon} alt="Logo User" className="w-8 h8" />
-            </Link>
+            <li>
+              <Link
+                to="/profil"
+                className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded"
+              >
+                <img src={userIcon} alt="Logo User" className="w-8 h8" />
+              </Link>
+            </li>
           </ul>
         </div>
       </header>

@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { PlayerInterface, TeamInterface } from "./Equipe";
 import axios from "axios";
+import { Link, Outlet } from "react-router-dom";
 
 export default function GererEquipe() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
@@ -52,79 +53,25 @@ export default function GererEquipe() {
 
   return (
     <>
-      <h3>Créer une équipe</h3>
-      <form onSubmit={handleCreateForm}>
-        <p>
-          Nom de l'équipe :{" "}
-          <input
-            className="border-4"
-            type="text"
-            onChange={(e) => setTeamName(e.target.value)}
-            value={teamName}
-          />
-        </p>
-      </form>
-      <button
-        type="submit"
-        disabled={isEmpty}
-        className={`${
-          isEmpty || isTooShort ? "cursor-not-allowed" : "hover:bg-red-400"
-        }`}
-      >
-        Créer l'équipe
-      </button>
-      {message && <p>{message}</p>}
-      <h3>Modifier une équipe</h3>
-      <form onSubmit={handleUpdateForm} className="h-64 overflow-scroll">
-        <ul>Liste des équipes</ul>
-        {teamsData.map((team: TeamInterface) => (
-          <li key={team.id}>
-            <p className="text-xl font-bold">Nom : {team.name} </p>
-            <p>ID : {team.id} </p>
-            <p>
-              Victoires :{" "}
-              <span className="text-green-500 font-bold">{team.wins}</span>{" "}
-            </p>
-            <p>
-              Défaites :{" "}
-              <span className="text-red-500 font-bold">{team.loses}</span>{" "}
-            </p>
-            <ul>
-              <p className="text-lg underline">Liste des joueurs</p>
-              {team.players.map((player: PlayerInterface) => (
-                <li key={player.id}>
-                  <p>
-                    Nom : {player.firstname} {player.lastname}
-                  </p>
-                  <p>
-                    Numéro : <span className="font-bold">{player.number}</span>
-                  </p>
-                  <p>
-                    Poste : <span className="font-bold">{player.position}</span>
-                  </p>
-                  <p className="capitalize">état de forme : {player.status}</p>
-                  <ul>
-                    {Array.isArray(player.incidents) &&
-                    player.incidents.length >= 0 ? (
-                      <p>Historique des incidents</p>
-                    ) : null}
-                    {Array.isArray(player.incidents) &&
-                    player.incidents.length > 0
-                      ? player.incidents.map(
-                          (incident: { id: number; type: string }) => (
-                            <li key={incident.id}>
-                              <p>Type : {incident.type}</p>
-                            </li>
-                          )
-                        )
-                      : null}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </form>
+      <h2 className="text-center pb-4 text-2xl">Gestion des équipes</h2>
+      <section className="flex justify-around">
+        <Link to="/profil/equipes/creer">
+          <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
+            <p>Créer</p>
+          </div>
+        </Link>
+        <Link to="/profil/equipes/modifier">
+          <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
+            <p>Modifier</p>
+          </div>
+        </Link>
+        <Link to="/profil/equipes/supprimer">
+          <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
+            <p>Supprimer</p>
+          </div>
+        </Link>
+      </section>
+      <Outlet />
     </>
   );
 }

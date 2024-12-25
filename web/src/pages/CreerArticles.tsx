@@ -18,8 +18,8 @@ export default function CreerArticle() {
     e.preventDefault();
     try {
       axios.post(
-        "http://localhost:3000/articles",
-        { title, body },
+        "http://localhost:3000/connection/login",
+        { username: "jester", password: "secret" },
         { withCredentials: true }
       );
 

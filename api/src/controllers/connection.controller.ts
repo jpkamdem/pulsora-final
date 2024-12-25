@@ -52,15 +52,16 @@ export async function login(user: LoginCredentials) {
     });
 
     if (!foundUser) {
-      throw new Error(`L'utilisateur ${user.username} n'existe pas`);
+      throw {
+        status: 404,
+        message: `L'utilisateur ${user.username} n'existe pas`,
+      };
     }
 
     const checkPassword = compareSync(user.password, foundUser.password);
 
     if (!checkPassword) {
-      throw new Error(
-        `Le mot de passe ne correspond pas à l'utilisateur ${user.username}`
-      );
+      throw { status: 404, message: "Mot de passe incorrect" };
     }
 
     const token = jwt.sign(
@@ -87,7 +88,6 @@ export async function loginOne(req: Request, res: Response) {
     const foundUser = await login(req.body);
     res.cookie("token", foundUser.token, {
       httpOnly: true,
-      secure: true,
     });
 
     res.status(200).json(foundUser);

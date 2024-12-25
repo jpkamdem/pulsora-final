@@ -14,6 +14,7 @@ export async function auth(
   next: NextFunction
 ) {
   try {
+    console.log("Cookies recçus : ", req.cookies);
     const token = req.cookies.token;
 
     if (!token) {

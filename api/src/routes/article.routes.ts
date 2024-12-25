@@ -7,6 +7,7 @@ import {
   deleteArticle,
 } from "../controllers/article.controller";
 import { PrismaClient } from "@prisma/client";
+import { auth } from "../middlewares/auth";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +15,7 @@ const articleRouter = Router();
 
 articleRouter.get("/", getAllArticles);
 articleRouter.get("/:id", getArticleById);
-articleRouter.post("/", createArticle);
+articleRouter.post("/", auth, createArticle);
 articleRouter.put("/:id", updateArticle);
 articleRouter.delete("/:id", deleteArticle);
 

@@ -1,6 +1,7 @@
 import stadiumOne from "../assets/stadium-1.png";
 import playerHome from "../assets/playerhome.png";
 import rightArrow from "../assets/right-arrow.png";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -34,44 +35,58 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)] gap-6  m-20 text-center">
-        <div className="bg-white text-slate-600 p-0 rounded-3xl flex-1 lg:h-full  relative">
-          <h2 className="text-2xl font-bold mt-4 lg:text-4xl lg:mt-8">
-            ARTICLE
-          </h2>
-          <img className="w-1/3 mx-auto lg:w-1/2" src={stadiumOne} alt="" />
-          <div className="w-16 h-16 bg-blue-800 rounded-full absolute right-2 bottom-2">
-            <img
-              className="w-1/2 mx-auto mt-4 -rotate-45 "
-              src={rightArrow}
-              alt=""
-            />
+        <Link to="/articles">
+          <div className="bg-white text-slate-600 p-0 rounded-3xl flex-1 lg:h-full  relative">
+            <h2 className="text-2xl font-bold mt-4 lg:text-4xl lg:mt-8">
+              ARTICLE
+            </h2>
+            <img className="w-1/3 mx-auto lg:w-1/2" src={stadiumOne} alt="" />
+            <div className="w-16 h-16 bg-blue-800 rounded-full absolute right-2 bottom-2">
+              <img
+                className="w-1/2 mx-auto mt-4 -rotate-45 "
+                src={rightArrow}
+                alt=""
+              />
+            </div>
           </div>
-        </div>
+        </Link>
 
         <div className="flex flex-col lg:w-1/3 lg:h-full gap-6">
-          <div className="bg-teal-200 text-white p-0 rounded-3xl flex-1  relative ">
-            <h2 className="text-2xl font-bold lg:text-4xl mt-4">SAISON</h2>
-            <img className="w-1/3  mx-auto lg:w-1/2" src={stadiumOne} alt="" />
-            <div className="w-16 h-16 bg-blue-800  rounded-full  absolute right-2  bottom-2">
+          <Link to="/saison">
+            <div className="bg-teal-200 text-white p-0 rounded-3xl flex-1  relative ">
+              <h2 className="text-2xl font-bold lg:text-4xl mt-4">SAISON</h2>
               <img
-                className="w-1/2 mx-auto mt-4 -rotate-45 "
-                src={rightArrow}
+                className="w-1/3  mx-auto lg:w-1/2"
+                src={stadiumOne}
                 alt=""
               />
+              <div className="w-16 h-16 bg-blue-800  rounded-full  absolute right-2  bottom-2">
+                <img
+                  className="w-1/2 mx-auto mt-4 -rotate-45 "
+                  src={rightArrow}
+                  alt=""
+                />
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="bg-lime-700 text-white p-0 rounded-3xl flex-1 relative">
-            <h2 className="text-2xl font-bold lg:text-4xl mt-4">EQUIPE</h2>
-            <img className="w-1/3  mx-auto lg:w-1/2" src={stadiumOne} alt="" />
-            <div className="w-16 h-16 bg-blue-800  rounded-full  absolute right-2  bottom-2">
+          <Link to="/equipe">
+            <div className="bg-lime-700 text-white p-0 rounded-3xl flex-1 relative">
+              <h2 className="text-2xl font-bold lg:text-4xl mt-4">EQUIPE</h2>
               <img
-                className="w-1/2 mx-auto mt-4 -rotate-45 "
-                src={rightArrow}
+                className="w-1/3  mx-auto lg:w-1/2"
+                src={stadiumOne}
                 alt=""
               />
+              <div className="w-16 h-16 bg-blue-800  rounded-full  absolute right-2  bottom-2">
+                <img
+                  className="w-1/2 mx-auto mt-4 -rotate-45 "
+                  src={rightArrow}
+                  alt=""
+                />
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </>

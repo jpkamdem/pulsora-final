@@ -5,17 +5,17 @@ export default function GererArticle() {
     <>
       <h2 className="text-center pb-4 text-2xl">Gestion des articles</h2>
       <section className="flex justify-around">
-        <Link to="/gerer/article/creer">
+        <Link to="/profil/articles/creer">
           <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
             <p>Créer</p>
           </div>
         </Link>
-        <Link to="/gerer/article/modifier">
+        <Link to="/profil/articles/modifier">
           <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
             <p>Modifier</p>
           </div>
         </Link>
-        <Link to="/gerer/article/supprimer">
+        <Link to="/profil/articles/supprimer">
           <div className="p-6 bg-slate-800 text-white text-lg font-bold hover:bg-white hover:text-slate-800">
             <p>Supprimer</p>
           </div>

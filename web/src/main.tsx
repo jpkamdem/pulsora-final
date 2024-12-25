@@ -9,13 +9,20 @@ import Saison from "./pages/Saison";
 import Equipe from "./pages/Equipe";
 import Contact from "./pages/Contact";
 import GenerateGame from "./pages/GenerateGame";
-import Gerer from "./pages/Gerer";
 import GererJoueur from "./pages/GererJoueur";
 import GererArticle from "./pages/GererArticle";
 import GererEquipe from "./pages/GererEquipe";
 import CreerArticle from "./pages/CreerArticles";
 import ModifierArticle from "./pages/ModifierArticle";
 import SupprimerArticle from "./pages/SupprimerArticle";
+import Profil from "./pages/Profil";
+import CreerJoueur from "./pages/CreerJoueur";
+import SupprimerJoueur from "./pages/SupprimerJoueur";
+import ModifierJoueur from "./pages/ModifierJoueur";
+import CreerEquipe from "./pages/CreerEquipe";
+import ModifierEquipe from "./pages/ModifierEquipe";
+import SupprimerEquipe from "./pages/SupprimerEquipe";
+import Auth from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -43,15 +50,19 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
       {
+        path: "authentification",
+        element: <Auth />,
+      },
+      {
         path: "generer-match",
         element: <GenerateGame />,
       },
       {
-        path: "gerer/",
-        element: <Gerer />,
+        path: "profil",
+        element: <Profil />,
         children: [
           {
-            path: "article",
+            path: "articles",
             element: <GererArticle />,
             children: [
               {
@@ -69,12 +80,40 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: "joueur",
+            path: "joueurs",
             element: <GererJoueur />,
+            children: [
+              {
+                path: "creer",
+                element: <CreerJoueur />,
+              },
+              {
+                path: "modifier",
+                element: <ModifierJoueur />,
+              },
+              {
+                path: "supprimer",
+                element: <SupprimerJoueur />,
+              },
+            ],
           },
           {
-            path: "equipe",
+            path: "equipes",
             element: <GererEquipe />,
+            children: [
+              {
+                path: "creer",
+                element: <CreerEquipe />,
+              },
+              {
+                path: "modifier",
+                element: <ModifierEquipe />,
+              },
+              {
+                path: "supprimer",
+                element: <SupprimerEquipe />,
+              },
+            ],
           },
         ],
       },
