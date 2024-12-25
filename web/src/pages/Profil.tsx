@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { TokenType, UserType } from "./Auth";
+import { TokenType } from "./Auth";
 
 export default function Profil() {
-  const [userDatas, setUserDatas] = useState<UserType[] | null>(null);
+  // const [userDatas, setUserDatas] = useState<UserType[] | null>(null);
 
-  async function fetchUsers() {
-    fetch("http://localhost:3000/users")
-      .then((res) => res.json())
-      .then((res) => setUserDatas(res));
-  }
+  // async function fetchUsers() {
+  //   fetch("http://localhost:3000/users")
+  //     .then((res) => res.json())
+  //     .then((res) => setUserDatas(res));
+  // }
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
 
   const storedToken = localStorage.getItem("token");
 
