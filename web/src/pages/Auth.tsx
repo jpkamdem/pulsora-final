@@ -1,6 +1,13 @@
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { FormEvent, useEffect, useState } from "react";
+
+export type TokenType = {
+  id: number;
+  username: string;
+  iat: number;
+  exp: number;
+};
 
 export const SECRET_KEY = "firstnameBunchOfNumbers4894616";
 
@@ -50,7 +57,6 @@ export default function Auth() {
 
       const datas = await res.json();
       setUserDatas(datas.data);
-      console.log(userDatas);
     } catch (err) {
       console.log(err);
     }
@@ -106,10 +112,11 @@ export default function Auth() {
           withCredentials: true,
         }
       );
-      const token = res.data.token;
-      console.log(token);
-      const decoded = jwtDecode(token);
-      console.log(decoded);
+
+      const token: string = res.data.token;
+      const decoded: TokenType = jwtDecode(token);
+      const tokenJSON = JSON.stringify(decoded);
+      localStorage.setItem("token", tokenJSON);
 
       setMessage("Utilisateur vérifié");
       setIsLoading(false);

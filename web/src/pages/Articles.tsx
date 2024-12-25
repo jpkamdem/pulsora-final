@@ -45,7 +45,7 @@ export default function Articles() {
         usersDatas.map((user) => (
           <>
             {user.articles.map((article) => (
-              <div>
+              <>
                 <div className="flex justify-center mt-8 mb-8">
                   <div className=" text-center relative  bg-white border-2 border-gray-100 rounded-t-xl  w-3/6 py-3  ">
                     <div
@@ -64,7 +64,7 @@ export default function Articles() {
                     {article.body}
                   </div>
                 </div>
-              </div>
+              </>
             ))}
           </>
         ))}
