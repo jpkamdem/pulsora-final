@@ -1,5 +1,8 @@
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+
+export const SECRET_KEY = "firstnameBunchOfNumbers4894616";
 
 export type UserType = {
   username: string;
@@ -96,14 +99,22 @@ export default function Auth() {
 
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:3000/connection/login", userLogin, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "http://localhost:3000/connection/login",
+        userLogin,
+        {
+          withCredentials: true,
+        }
+      );
+      const token = res.data.token;
+      console.log(token);
+      const decoded = jwtDecode(token);
+      console.log(decoded);
+
       setMessage("Utilisateur vérifié");
       setIsLoading(false);
     } catch (err: any) {
       setMessage(err.response?.data?.message || "Erreur inconnue");
-      console.log(message);
       setIsLoading(false);
     }
   }
