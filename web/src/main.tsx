@@ -13,16 +13,13 @@ import GererJoueur from "./pages/GererJoueur";
 import GererArticle from "./pages/GererArticle";
 import GererEquipe from "./pages/GererEquipe";
 import CreerArticle from "./pages/CreerArticles";
-import ModifierArticle from "./pages/ModifierArticle";
-import SupprimerArticle from "./pages/SupprimerArticle";
 import Profil from "./pages/Profil";
 import CreerJoueur from "./pages/CreerJoueur";
-import SupprimerJoueur from "./pages/SupprimerJoueur";
-import ModifierJoueur from "./pages/ModifierJoueur";
 import CreerEquipe from "./pages/CreerEquipe";
-import ModifierEquipe from "./pages/ModifierEquipe";
-import SupprimerEquipe from "./pages/SupprimerEquipe";
 import Auth from "./pages/Auth";
+import EditerArticle from "./pages/EditerArticle";
+import EditerJoueur from "./pages/EditerJoueur";
+import EditerEquipe from "./pages/EditerEquipe";
 
 const router = createBrowserRouter([
   {
@@ -70,12 +67,8 @@ const router = createBrowserRouter([
                 element: <CreerArticle />,
               },
               {
-                path: "modifier",
-                element: <ModifierArticle />,
-              },
-              {
-                path: "supprimer",
-                element: <SupprimerArticle />,
+                path: "editer",
+                element: <EditerArticle />,
               },
             ],
           },
@@ -88,12 +81,8 @@ const router = createBrowserRouter([
                 element: <CreerJoueur />,
               },
               {
-                path: "modifier",
-                element: <ModifierJoueur />,
-              },
-              {
-                path: "supprimer",
-                element: <SupprimerJoueur />,
+                path: "editer",
+                element: <EditerJoueur />,
               },
             ],
           },
@@ -106,12 +95,8 @@ const router = createBrowserRouter([
                 element: <CreerEquipe />,
               },
               {
-                path: "modifier",
-                element: <ModifierEquipe />,
-              },
-              {
-                path: "supprimer",
-                element: <SupprimerEquipe />,
+                path: "editer",
+                element: <EditerEquipe />,
               },
             ],
           },

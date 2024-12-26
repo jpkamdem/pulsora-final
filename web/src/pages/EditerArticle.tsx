@@ -20,7 +20,7 @@ export type User = {
   articles: Article[];
 };
 
-export default function SupprimerArticle() {
+export default function EditerArticle() {
   const storedToken = localStorage.getItem("token");
 
   if (!storedToken) {
@@ -59,9 +59,9 @@ export default function SupprimerArticle() {
   return (
     <div>
       <h2 className="font-bold text-lg">Liste de vos articles</h2>
-      <ul>
-        {usersDatas.map((user) => (
-          <>
+      <ul className="overflow-y-scroll h-64">
+        {usersDatas.map((user, index) => (
+          <div key={index}>
             {user.articles.map((article, indexx) => (
               <>
                 {article.authorId === decodedToken.id ? (
@@ -78,15 +78,16 @@ export default function SupprimerArticle() {
                     </p>
                     <button
                       onClick={() => deleteArticle(article.id)}
-                      className="p-5 bg-red-400"
+                      className="p-5 bg-red-500"
                     >
                       Supprimer
                     </button>
+                    <button className="p-5 bg-yellow-400">Modifier</button>
                   </li>
                 ) : null}
               </>
             ))}
-          </>
+          </div>
         ))}
       </ul>
     </div>
