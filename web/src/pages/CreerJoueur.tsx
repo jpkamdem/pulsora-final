@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { TeamInterface } from "./Equipe";
+// import { useState } from "react";
+// import { TeamInterface } from "./Equipe";
 
 export type Position = "GK" | "DEF" | "MF" | "ATK";
 
@@ -12,34 +12,34 @@ export type Player = {
 };
 
 export default function CreerJoueur() {
-  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
-  const [player, setPlayer] = useState<Player>({
-    firstname: "",
-    lastname: "",
-    number: 0,
-    position: "ATK",
-    teamId: undefined,
-  });
+  // const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
+  // const [player, setPlayer] = useState<Player>({
+  //   firstname: "",
+  //   lastname: "",
+  //   number: 0,
+  //   position: "ATK",
+  //   teamId: undefined,
+  // });
 
-  const isEmpty = false;
+  // const isEmpty = false;
 
-  const fetchTeamsData = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/teams");
-      if (!res.ok) {
-        throw new Error(
-          `Erreur dans la récupération des données des matchs : ${res.status}`
-        );
-      }
+  // const fetchTeamsData = async () => {
+  //   try {
+  //     const res = await fetch("http://localhost:3000/teams");
+  //     if (!res.ok) {
+  //       throw new Error(
+  //         `Erreur dans la récupération des données des matchs : ${res.status}`
+  //       );
+  //     }
 
-      const datas = await res.json();
-      setTeamsData(datas.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //     const datas = await res.json();
+  //     setTeamsData(datas.data);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
-  fetchTeamsData();
+  // fetchTeamsData();
   return (
     <>
       <form className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2">
@@ -100,7 +100,11 @@ export default function CreerJoueur() {
             </div>
           </li>
         </ul>
-        <button type="submit" className={`p-4 font-bold`} disabled={isEmpty}>
+        <button
+          type="submit"
+          className={`p-4 font-bold`}
+          // disabled={isEmpty}
+        >
           Créer
         </button>
       </form>
