@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { FormEvent, useEffect, useState } from "react";
 
 export type TokenType = {
@@ -114,9 +113,7 @@ export default function Auth() {
       );
 
       const token: string = res.data.token;
-      const decoded: TokenType = jwtDecode(token);
-      const tokenJSON = JSON.stringify(decoded);
-      localStorage.setItem("token", tokenJSON);
+      localStorage.setItem("token", token);
 
       setMessage("Utilisateur vérifié");
       setIsLoading(false);

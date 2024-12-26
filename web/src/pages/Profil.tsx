@@ -1,28 +1,16 @@
 // import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { TokenType } from "./Auth";
+import { jwtDecode } from "jwt-decode";
 
 export default function Profil() {
-  // const [userDatas, setUserDatas] = useState<UserType[] | null>(null);
-
-  // async function fetchUsers() {
-  //   fetch("http://localhost:3000/users")
-  //     .then((res) => res.json())
-  //     .then((res) => setUserDatas(res));
-  // }
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
-
   const storedToken = localStorage.getItem("token");
 
   if (!storedToken) {
     console.log("Il n'y a pas de token dans le local storage");
     return;
   }
-
-  const decodedToken: TokenType = JSON.parse(storedToken);
+  const decodedToken: TokenType = jwtDecode(storedToken);
 
   return (
     <>
@@ -31,8 +19,12 @@ export default function Profil() {
           {" "}
           <section>
             <ul>
-              <li>ID : {decodedToken.id}</li>
-              <li>Nom d'utilisateur : {decodedToken.username} </li>
+              <li>
+                <p>ID : {decodedToken.id}</p>
+              </li>
+              <li>
+                <p>Nom d'utilisateur : {decodedToken.username}</p>
+              </li>
             </ul>
           </section>
           <div className="p-8">

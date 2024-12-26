@@ -88,6 +88,10 @@ export async function loginOne(req: Request, res: Response) {
     const foundUser = await login(req.body);
     res.cookie("token", foundUser.token, {
       httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 10 * 60 * 1000,
+      partitioned: true,
     });
 
     res.status(200).json(foundUser);

@@ -1,25 +1,13 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import axios from "axios";
-import { TokenType, UserType } from "./Auth";
+import { TokenType } from "./Auth";
+import { jwtDecode } from "jwt-decode";
 
 export default function CreerArticle() {
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const [userDatas, setUserDatas] = useState<UserType[] | null>(null);
-
-  async function fetchUsers() {
-    fetch("http://localhost:3000/users")
-      .then((res) => res.json())
-      .then((res) => setUserDatas(res));
-  }
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const isEmpty = title.trim() === "" || body.trim() === "";
 
   const handleForm = async (e: FormEvent) => {
@@ -28,16 +16,24 @@ export default function CreerArticle() {
     const storedToken = localStorage.getItem("token");
 
     if (!storedToken) {
-      setMessage("Veuillez vous authentifier");
+      console.log("Il n'y a pas de token dans le local storage");
       return;
     }
-    const decodedToken: TokenType = JSON.parse(storedToken);
-    setIsLoading(true);
+    const decodedToken: TokenType = jwtDecode(storedToken);
+
     try {
-      axios.post(
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+      axios.defaults.withCredentials = true;
+
+      await axios.post(
         "http://localhost:3000/articles",
         { title: title, body: body, authorId: decodedToken.id },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        }
       );
 
       setMessage("Article créé avec succès");
