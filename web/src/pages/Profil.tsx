@@ -2,19 +2,33 @@
 import { Link, Outlet } from "react-router-dom";
 import { TokenType } from "./Auth";
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 
 export default function Profil() {
-  const storedToken = localStorage.getItem("token");
+  const [decodedToken, setDecodedToken] = useState<TokenType | null>(null);
 
-  if (!storedToken) {
-    console.log("Il n'y a pas de token dans le local storage");
-    return;
-  }
-  const decodedToken: TokenType = jwtDecode(storedToken);
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+      console.log("Aucun token trouvé dans le localstorage");
+      return;
+    }
+
+    const token: TokenType = jwtDecode(storedToken);
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (token.exp < currentTime) {
+      console.log("Token expiré");
+      localStorage.removeItem("token");
+      setDecodedToken(null);
+    } else {
+      setDecodedToken(token);
+    }
+  }, []);
 
   return (
     <>
-      {storedToken ? (
+      {decodedToken ? (
         <>
           {" "}
           <section>
