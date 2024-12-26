@@ -21,7 +21,13 @@ const origins = [
   "http://0.0.0.0:8090",
 ];
 
-app.use(cors({ origin: origins, credentials: true }));
+app.use(
+  cors({
+    origin: origins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 app.use(cookieParser());
 
