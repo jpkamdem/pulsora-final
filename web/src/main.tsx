@@ -20,12 +20,17 @@ import Auth from "./pages/Auth";
 import EditerArticle from "./pages/EditerArticle";
 import EditerJoueur from "./pages/EditerJoueur";
 import EditerEquipe from "./pages/EditerEquipe";
+import Loading from "./pages/Loading";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: <Loading />,
+      },
       {
         path: "/",
         element: <Home />,
