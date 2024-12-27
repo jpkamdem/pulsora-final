@@ -1,6 +1,6 @@
-import React from "react";
+import animatedPulsora from "../assets/logopulsora.mp4";
 
-const VideoWithButton: React.FC = () => {
+export default function VideoWithButton() {
   const handleEnter = () => {
     alert("Entrée dans l'application !");
   };
@@ -13,18 +13,16 @@ const VideoWithButton: React.FC = () => {
         muted
         className="w-3/4 max-w-lg rounded-lg shadow-lg"
       >
-        <source src="\logopulsora.mp4" type="video/mp4" />
+        <source src={animatedPulsora} type="video/mp4" />
         Votre navigateur ne supporte pas la lecture vidéo.
       </video>
 
       <button
         onClick={handleEnter}
-        className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover: bg-blue-900 transition"
+        className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:  transition"
       >
         Entrer
       </button>
     </div>
   );
-};
-
-export default VideoWithButton;
+}

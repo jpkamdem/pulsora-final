@@ -56,7 +56,14 @@ export default function GenerateGame() {
 
   return (
     <>
-      <button onClick={() => generateGame()}>Générer un match</button>
+      <div className="flex h-36 justify-center items-center">
+        <button
+          className="bg-slate-800 text-2xl text-white p-8 hover:text-slate-800 hover:bg-white"
+          onClick={() => generateGame()}
+        >
+          Générer un match
+        </button>
+      </div>
       {message && <p>{message}</p>}
     </>
   );
