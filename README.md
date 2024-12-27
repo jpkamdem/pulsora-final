@@ -94,10 +94,19 @@ Selon la méthode de déploiement que vous choisirez, veuillez modifier la varia
 
 #### Développement
 
+Veuillez exécuter ces commandes à l'intérieur du repo cloné.
+
+Si vous avez du mal, deux scripts permettent de déployer le projet, en développement ou production. Cependant, veuillez modifier la variable comme expliqué ci-dessus dans les fichiers.
+
+- dev_launch.sh
+- prod_launch.sh
+
 ```bash
-cd pulsora-final/web
+cd ./web
 npm i
 npm run dev
+# Veuillez changer de terminal et laisser la commande npm run dev tourner
+
 cd ../api/
 npm i
 docker compose up --wait db
@@ -108,7 +117,6 @@ npm run dev
 #### Production
 
 ```bash
-cd pulsora-final/
 docker compose up --wait
 ```
 
