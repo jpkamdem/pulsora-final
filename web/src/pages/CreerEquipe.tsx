@@ -1,31 +1,33 @@
 import { FormEvent, useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
-import axios from "axios";
+import { extractErrorMessage } from "../utils/security";
 
 export default function CreerEquipe() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
   const [teamName, setTeamName] = useState("");
   const [message, setMessage] = useState("");
-  const fetchTeamsData = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/teams");
-      if (!res.ok) {
-        throw new Error(
-          `Erreur dans la récupération des données des matchs : ${res.status}`
-        );
-      }
-
-      const datas = await res.json();
-      setTeamsData(datas.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEmpty = teamName.trim() === "";
 
   useEffect(() => {
-    fetchTeamsData();
+    const controller = new AbortController();
+
+    fetch("http://localhost:3000/teams", {
+      signal: controller.signal,
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setTeamsData(datas.data))
+      .catch((err) => extractErrorMessage(err));
+
+    return () => controller.abort();
   }, []);
 
   async function handleSubmit(e: FormEvent) {
@@ -35,17 +37,27 @@ export default function CreerEquipe() {
       return;
     }
 
-    if (teamsData.some((team) => team.name === teamName)) {
+    if (teamsData.some((team) => team.name.trim() === teamName)) {
       setMessage("Ce nom d'équipe est déjà pris");
       return;
     }
 
-    try {
-      await axios.post("http://localhost:3000/teams", { name: teamName });
-      setMessage("Equipe créée");
-    } catch (error) {
-      console.log(error);
-    }
+    setIsLoading(true);
+
+    fetch("http://localhost:3000/teams", {
+      method: "POST",
+      credentials: "same-origin",
+      mode: "cors",
+      body: JSON.stringify({ name: teamName }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(() => setMessage("Equipe créée"))
+      .catch((error) => extractErrorMessage(error))
+      .catch(() => setMessage("Erreur lors de la création d'une équipe"))
+      .finally(() => setIsLoading(false));
   }
 
   return (
@@ -71,7 +83,7 @@ export default function CreerEquipe() {
           Créer
         </button>
       </form>
-      {message && <p>{message}</p>}
+      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
     </>
   );
 }

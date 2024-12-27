@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PlayerInterface, TeamInterface } from "./Equipe";
 import { Link } from "react-router-dom";
+import { extractErrorMessage } from "../utils/security";
 
 export interface GameInterface {
   id: number;
@@ -16,39 +17,37 @@ export default function Saison() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
 
   useEffect(() => {
-    const fetchGamesData = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/games");
-        if (!res.ok) {
-          throw new Error(
-            `Erreur dans la récupération des données des matchs : ${res.status}`
-          );
-        }
-        const datas = await res.json();
-        setGamesData(datas.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
+    const controller = new AbortController();
 
-    const fetchTeamsData = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/teams");
-        if (!res.ok) {
-          throw new Error(
-            `Erreur dans la récupération des données des matchs : ${res.status}`
-          );
-        }
+    fetch("http://localhost:3000/games", {
+      signal: controller.signal,
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setGamesData(datas.data))
+      .catch((err) => extractErrorMessage(err));
 
-        const datas = await res.json();
-        setTeamsData(datas.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
+    fetch("http://localhost:3000/teams", {
+      signal: controller.signal,
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setTeamsData(datas.data))
+      .catch((err) => extractErrorMessage(err));
 
-    fetchTeamsData();
-    fetchGamesData();
+    return () => controller.abort();
   }, []);
 
   return (

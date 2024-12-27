@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # Lancer le serveur web dans un nouveau terminal
+docker compose down -v
+
+docker rmi pulsora-api:latest pulsora-web:latest
+
 gnome-terminal -- bash -c "cd ./web && npm i && npm run dev; exec bash"
 
 # Lancer le serveur API dans un autre terminal

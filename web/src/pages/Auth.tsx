@@ -1,5 +1,6 @@
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
+import { extractErrorMessage } from "../utils/security";
 
 export type TokenType = {
   id: number;
@@ -45,24 +46,24 @@ export default function Auth() {
   const isUserLoginEmpty =
     userLogin.password.trim() === "" || userLogin.username.trim() === "";
 
-  async function fetchUsers() {
-    try {
-      const res = await fetch("http://localhost:3000/users");
-      if (!res.ok) {
-        throw new Error(
-          "Erreur lors de la récupération des données d'utilisateurs"
-        );
-      }
-
-      const datas = await res.json();
-      setUserDatas(datas.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   useEffect(() => {
-    fetchUsers();
+    const controller = new AbortController();
+
+    fetch("http://localhost:3000/users", {
+      signal: controller.signal,
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setUserDatas(datas.data))
+      .catch((error) => extractErrorMessage(error));
+
+    return () => controller.abort();
   }, []);
 
   async function handleRegisterSumbit(e: FormEvent) {
@@ -74,20 +75,20 @@ export default function Auth() {
 
     setIsLoading(true);
     try {
-      await axios.post(
-        "http://localhost:3000/connection/register",
-        userRegister,
-        {
-          withCredentials: true,
-        }
-      );
-      setMessage("Utilisateur créé avec succès");
-      setUserRegister({ username: "", password: "" });
-      fetchUsers();
-      setIsLoading(false);
+      fetch("http://localhost:3000/connection/register", {
+        method: "POST",
+        credentials: "same-origin",
+        mode: "cors",
+        body: JSON.stringify(userRegister),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .catch((error) => extractErrorMessage(error))
+        .finally(() => setIsLoading(false));
     } catch (err) {
-      console.error(err);
-      setIsLoading(false);
+      console.log(err);
     }
   }
 
@@ -97,7 +98,9 @@ export default function Auth() {
       setMessage("Veuillez remplir tous les champs de connexion");
       return;
     }
-    if (!userDatas?.some((user) => user.username === userLogin.username)) {
+    if (
+      !userDatas?.some((user) => user.username === userLogin.username.trim())
+    ) {
       setMessage(`L'utilisateur ${userLogin.username} n'existe pas`);
       return;
     }
