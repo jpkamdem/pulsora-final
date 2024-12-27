@@ -1,7 +1,7 @@
-// import { useState } from "react";
-// import { TeamInterface } from "./Equipe";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { TeamInterface } from "./Equipe";
 
-export type Position = "GK" | "DEF" | "MF" | "ATK";
+export type Position = "GK" | "DEF" | "MF" | "FW" | undefined;
 
 export type Player = {
   firstname: string;
@@ -12,37 +12,93 @@ export type Player = {
 };
 
 export default function CreerJoueur() {
-  // const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
-  // const [player, setPlayer] = useState<Player>({
-  //   firstname: "",
-  //   lastname: "",
-  //   number: 0,
-  //   position: "ATK",
-  //   teamId: undefined,
-  // });
+  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // const isEmpty = false;
+  const [player, setPlayer] = useState<Player>({
+    firstname: "",
+    lastname: "",
+    number: 0,
+    position: undefined,
+    teamId: undefined,
+  });
 
-  // const fetchTeamsData = async () => {
-  //   try {
-  //     const res = await fetch("http://localhost:3000/teams");
-  //     if (!res.ok) {
-  //       throw new Error(
-  //         `Erreur dans la récupération des données des matchs : ${res.status}`
-  //       );
-  //     }
+  const isEmpty =
+    player.firstname.trim() === "" ||
+    player.lastname.trim() === "" ||
+    player.teamId === undefined ||
+    player.position === undefined;
 
-  //     const datas = await res.json();
-  //     setTeamsData(datas.data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  async function fetchTeamsData() {
+    await fetch("http://localhost:3000/teams", {
+      method: "GET",
+      mode: "cors",
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((datas) => setTeamsData(datas.data))
+      .catch((err) => console.log(err));
+  }
 
-  // fetchTeamsData();
+  useEffect(() => {
+    fetchTeamsData();
+  }, []);
+
+  async function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setPlayer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  const options: { value: Position; label: string }[] = [
+    { value: "GK", label: "Gardien" },
+    { value: "DEF", label: "Défenseur" },
+    { value: "MF", label: "Milieu" },
+    { value: "FW", label: "Attaquant" },
+  ];
+
+  async function handleFormSubmit(e: FormEvent) {
+    e.preventDefault();
+    console.log(player);
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/players", {
+        method: "POST",
+        mode: "cors",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstname: player.firstname,
+          lastname: player.lastname,
+          number: Number(player.number),
+          position: player.position,
+          teamId: Number(player.teamId),
+          status: "Opérationnel",
+          incidents: [],
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur inconnue du serveur");
+      }
+
+      setMessage("Jouer créé.");
+    } catch (err: any) {
+      console.log(err);
+      setMessage(err.message || "Erreur lors de la création d'un joueur");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <>
-      <form className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2">
+      <form
+        onSubmit={(e: FormEvent) => handleFormSubmit(e)}
+        className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
+      >
         <ul className="w-3/5 h-full pt-4 pb-4 flex flex-col items-center">
           <li className="w-full flex justify-center">
             <div className="p-4 w-full">
@@ -52,6 +108,7 @@ export default function CreerJoueur() {
                 type="text"
                 autoComplete="off"
                 name="firstname"
+                onChange={handleChange}
               />
             </div>
           </li>
@@ -63,6 +120,7 @@ export default function CreerJoueur() {
                 type="text"
                 autoComplete="off"
                 name="lastname"
+                onChange={handleChange}
               />
             </div>
           </li>
@@ -74,40 +132,52 @@ export default function CreerJoueur() {
                 type="number"
                 autoComplete="off"
                 name="number"
+                onChange={handleChange}
               />
             </div>
           </li>
           <li className="w-full flex justify-center">
             <div className="p-4 w-full">
               <p>Poste</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                autoComplete="off"
+              <select
+                defaultValue={undefined}
+                onChange={handleChange}
                 name="position"
-              />
+              >
+                <option value="">{undefined} </option>
+                {options.map((option, index) => (
+                  <>
+                    <option key={index} value={option.value}>
+                      {option.label}
+                    </option>
+                  </>
+                ))}
+              </select>
             </div>
           </li>
           <li className="w-full flex justify-center">
             <div className="p-4 w-full">
               <p className="capitalize">équipe</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                autoComplete="off"
-                name="team"
-              />
+              <select onChange={handleChange} name="teamId">
+                <option defaultValue={undefined} value="">
+                  {undefined}
+                </option>
+                {teamsData.map((team, index) => (
+                  <>
+                    <option key={index} value={team.id}>
+                      {team.name}
+                    </option>
+                  </>
+                ))}
+              </select>
             </div>
           </li>
         </ul>
-        <button
-          type="submit"
-          className={`p-4 font-bold`}
-          // disabled={isEmpty}
-        >
+        <button type="submit" className={`p-4 font-bold`} disabled={isEmpty}>
           Créer
         </button>
       </form>
+      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
 import axios from "axios";
 
@@ -24,7 +24,9 @@ export default function CreerEquipe() {
 
   const isEmpty = teamName.trim() === "";
 
-  fetchTeamsData();
+  useEffect(() => {
+    fetchTeamsData();
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

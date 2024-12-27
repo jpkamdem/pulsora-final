@@ -37,6 +37,7 @@ services:
       start_period: 30s
     depends_on:
       - db
+      - web
     networks:
       - app-network
   web:
