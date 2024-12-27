@@ -49,6 +49,10 @@ export default function CreerJoueur() {
     setPlayer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
+  async function handleChangeSelect(e: ChangeEvent<HTMLSelectElement>) {
+    setPlayer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
   const options: { value: Position; label: string }[] = [
     { value: "GK", label: "Gardien" },
     { value: "DEF", label: "Défenseur" },
@@ -58,7 +62,6 @@ export default function CreerJoueur() {
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
-    console.log(player);
     setIsLoading(true);
     try {
       const response = await fetch("http://localhost:3000/players", {
@@ -141,7 +144,7 @@ export default function CreerJoueur() {
               <p>Poste</p>
               <select
                 defaultValue={undefined}
-                onChange={handleChange}
+                onChange={handleChangeSelect}
                 name="position"
               >
                 <option value="">{undefined} </option>
@@ -158,7 +161,7 @@ export default function CreerJoueur() {
           <li className="w-full flex justify-center">
             <div className="p-4 w-full">
               <p className="capitalize">équipe</p>
-              <select onChange={handleChange} name="teamId">
+              <select onChange={handleChangeSelect} name="teamId">
                 <option defaultValue={undefined} value="">
                   {undefined}
                 </option>
