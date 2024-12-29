@@ -143,6 +143,7 @@ export default function EditerArticle() {
               className="border-solid flex flex-col items-center m-auto border-2"
               onSubmit={(e) => editArticle(e, inputField.articleId)}
             >
+              <p>ID: {inputField.articleId} </p>
               <ul>
                 <li>
                   <label>Titre</label>
