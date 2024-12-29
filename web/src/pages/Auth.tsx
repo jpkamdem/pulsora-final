@@ -61,7 +61,7 @@ export default function Auth() {
     })
       .then((res) => res.json())
       .then((datas) => setUserDatas(datas.data))
-      .catch((error) => extractErrorMessage(error));
+      .catch((error) => setMessage(extractErrorMessage(error)));
 
     return () => controller.abort();
   }, []);
@@ -85,6 +85,13 @@ export default function Auth() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
+        .then(() => setMessage("Utilisateur créé."))
+        .then(() => {
+          fetch("http://localhost:3000/users")
+            .then((res) => res.json())
+            .then((datas) => setUserDatas(datas.data))
+            .catch((error) => setMessage(extractErrorMessage(error)));
+        })
         .catch((error) => extractErrorMessage(error))
         .finally(() => setIsLoading(false));
     } catch (err) {

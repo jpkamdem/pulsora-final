@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
+import { extractErrorMessage } from "../utils/security";
 
 export interface GameGeneratorInterface {
   homeTeamId: number;
@@ -9,32 +9,28 @@ export interface GameGeneratorInterface {
 
 export default function GenerateGame() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
-
-  useEffect(() => {
-    const fetchTeamsData = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/teams");
-        if (!res.ok) {
-          throw new Error(
-            `Erreur dans la récupération des données des matchs : ${res.status}`
-          );
-        }
-
-        const datas = await res.json();
-        setTeamsData(datas.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    fetchTeamsData();
-  }, []);
-
   const [message, setMessage] = useState("");
 
-  const generateGame = async () => {
-    const url = "http://localhost:3000/games";
+  useEffect(() => {
+    const controller = new AbortController();
 
+    fetch("http://localhost:3000/teams", {
+      signal: controller.signal,
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setTeamsData(datas.data))
+      .then(() => setMessage("Equipe créée"))
+      .catch((error) => setMessage(extractErrorMessage(error)));
+  }, []);
+
+  const generateGame = async () => {
     if (teamsData.length <= 1) {
       setMessage("Il n'y a pas assez d'équipes pour simuler une rencontre");
       return;
@@ -47,8 +43,18 @@ export default function GenerateGame() {
     } while (homeTeamId === awayTeamId);
 
     try {
-      await axios.post(url, { homeTeamId, awayTeamId });
-      setMessage("Match généré avec succès");
+      fetch("http://localhost:3000/games", {
+        method: "POST",
+        credentials: "same-origin",
+        mode: "cors",
+        body: JSON.stringify({ homeTeamId, awayTeamId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then(() => setMessage("Match généré !"))
+        .catch((error) => setMessage(extractErrorMessage(error)));
     } catch (e) {
       setMessage("Erreur lors de la générationdu match");
     }

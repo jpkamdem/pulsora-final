@@ -1,35 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
-import axios from "axios";
+import { extractErrorMessage } from "../utils/security";
 
 export default function EditerEquipe() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
-  const fetchTeamsData = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/teams");
-      if (!res.ok) {
-        throw new Error(
-          `Erreur dans la récupération des données des matchs : ${res.status}`
-        );
-      }
 
-      const datas = await res.json();
-      setTeamsData(datas.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  async function fetchTeams() {
+    fetch("http://localhost:3000/teams", {
+      method: "GET",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((datas) => setTeamsData(datas.data))
+      .catch((error) => console.log(extractErrorMessage(error)));
+  }
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
   async function deleteTeam(id: number) {
     try {
-      await axios.delete(`http://localhost:3000/teams/${id}`, {
-        withCredentials: true,
+      const response = await fetch(`http://localhost:3000/teams/${id}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-    } catch (error) {
-      console.log(error);
+
+      if (response.ok) {
+        fetch("http://localhost:3000/teams")
+          .then((res) => res.json())
+          .then((datas) => setTeamsData(datas.data));
+        console.log("Equipe supprimée");
+      } else {
+        throw new Error("Erreur lors de la suppression");
+      }
+    } catch (err) {
+      console.log(extractErrorMessage(err));
     }
   }
 
-  fetchTeamsData();
   return (
     <>
       <div>
