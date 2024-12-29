@@ -62,18 +62,16 @@ façon efficace
 
 #### Back
 
-- Docker
+- Node.Js (Express.Js, Prisma)
 - PostgreSQL
-- Express.js
-- Prisma
 
-Tout le projet est réalisé avec TypeScript.
+Tout le projet est réalisé avec TypeScript et se déploie via Docker..
 
 Ce repo était initialement destiné à l'API. L'interface web présente vient d'un autre repo. [Voir plus.](https://github.com/darryl-sangare/pulsora.git)
 
 ## Déploiement
 
-#### Prérequis
+Prérequis
 
 - Docker
 - Node.js
@@ -105,9 +103,9 @@ Si vous avez du mal, deux scripts permettent de déployer le projet, en dévelop
 cd ./web
 npm i
 npm run dev
-# Veuillez changer de terminal et laisser la commande npm run dev tourner
+# Veuillez changer de terminal et laisser la commande npm run dev tourner en arrière-plan
 
-cd ../api/
+cd ./api/
 npm i
 docker compose up --wait db
 npx prisma db push
