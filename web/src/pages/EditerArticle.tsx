@@ -60,7 +60,10 @@ export default function EditerArticle() {
     }
   }
 
-  const [articleId, setArticleId] = useState<number>(0);
+  const [inputField, setInputField] = useState({
+    articleId: 0,
+    showUpdateField: false,
+  });
 
   async function editArticle(e: FormEvent, id: number) {
     e.preventDefault();
@@ -116,7 +119,13 @@ export default function EditerArticle() {
                         </button>
                         <button
                           className="p-5 bg-yellow-400"
-                          onClick={() => setArticleId(article.id)}
+                          onClick={() => {
+                            setInputField((prev) => ({
+                              ...prev,
+                              articleId: article.id,
+                              showUpdateField: !inputField.showUpdateField,
+                            }));
+                          }}
                         >
                           Modifier
                         </button>
@@ -128,45 +137,47 @@ export default function EditerArticle() {
             ))}
           </ul>
         </div>
-        <div className="flex justify-self-start">
-          <form
-            className="border-solid flex flex-col items-center m-auto border-2"
-            onSubmit={(e) => editArticle(e, articleId)}
-          >
-            <ul>
-              <li>
-                <label>Titre</label>
-                <input
-                  className="border-4 w-full"
-                  name="title"
-                  onChange={(e) =>
-                    setUpdatedArticle((prev) => ({
-                      ...prev,
-                      title: e.target.value,
-                    }))
-                  }
-                  type="text"
-                />
-              </li>
-              <li>
-                <label>Contenu</label>
-                <textarea
-                  name="body"
-                  onChange={(e) =>
-                    setUpdatedArticle((prev) => ({
-                      ...prev,
-                      body: e.target.value,
-                    }))
-                  }
-                  className="border-4 resize-none w-full h-full"
-                ></textarea>
-              </li>
-            </ul>
-            <button type="submit" className="p-4 font-bold">
-              Modifier
-            </button>
-          </form>
-        </div>
+        {inputField.showUpdateField ? (
+          <div className="flex justify-self-start">
+            <form
+              className="border-solid flex flex-col items-center m-auto border-2"
+              onSubmit={(e) => editArticle(e, inputField.articleId)}
+            >
+              <ul>
+                <li>
+                  <label>Titre</label>
+                  <input
+                    className="border-4 w-full"
+                    name="title"
+                    onChange={(e) =>
+                      setUpdatedArticle((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    type="text"
+                  />
+                </li>
+                <li>
+                  <label>Contenu</label>
+                  <textarea
+                    name="body"
+                    onChange={(e) =>
+                      setUpdatedArticle((prev) => ({
+                        ...prev,
+                        body: e.target.value,
+                      }))
+                    }
+                    className="border-4 resize-none w-full h-full"
+                  ></textarea>
+                </li>
+              </ul>
+              <button type="submit" className="p-4 font-bold">
+                Modifier
+              </button>
+            </form>
+          </div>
+        ) : null}
       </div>
     </>
   );
