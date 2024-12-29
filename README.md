@@ -1,7 +1,5 @@
 ![screenshot](/livrables/pulsora-1.png)
 
-### Auteur : jpkamdem
-
 Pulsora est un projet d’application web gratuite dédiée à la gestion des équipes
 sportives. Conçue pour les entraîneurs, les joueurs et les responsables de clubs,
 cet outil facilite l'organisation et la communication au sein des équipes. Elle
@@ -65,7 +63,7 @@ façon efficace
 - Node.Js (Express.Js, Prisma)
 - PostgreSQL
 
-Tout le projet est réalisé avec TypeScript et se déploie via Docker..
+Tout le projet est réalisé avec TypeScript et se déploie via Docker.
 
 Ce repo était initialement destiné à l'API. L'interface web présente vient d'un autre repo. [Voir plus.](https://github.com/darryl-sangare/pulsora.git)
 
