@@ -37,7 +37,13 @@ export default function CreerEquipe() {
       return;
     }
 
-    if (teamsData.some((team) => team.name.trim() === teamName)) {
+    if (
+      teamsData.some(
+        (team) =>
+          team.name.toLocaleLowerCase().trim() ===
+          teamName.toLocaleLowerCase().trim()
+      )
+    ) {
       setMessage("Ce nom d'équipe est déjà pris");
       return;
     }
