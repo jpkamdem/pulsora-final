@@ -2,10 +2,16 @@ import { useEffect, useState, FormEvent } from "react";
 import { PlayerInterface, TeamInterface } from "./Equipe";
 import { extractErrorMessage } from "../utils/security";
 
+export type Status = "Suspendu" | "Blessé" | "Opérationnel" | "Inconnu";
+
 export default function EditerJoueur() {
-  const [teams, setTeams] = useState<TeamInterface[]>([]); 
-  const [selectedPlayer, setSelectedPlayer] = useState<PlayerInterface | null>(null); 
-  const [updatedPlayer, setUpdatedPlayer] = useState<PlayerInterface | null>(null); 
+  const [teams, setTeams] = useState<TeamInterface[]>([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerInterface | null>(
+    null
+  );
+  const [updatedPlayer, setUpdatedPlayer] = useState<PlayerInterface | null>(
+    null
+  );
 
   useEffect(() => {
     fetch("http://localhost:3000/teams", {
@@ -33,7 +39,7 @@ export default function EditerJoueur() {
       },
     })
       .then(() => {
-        fetchTeams(); 
+        fetchTeams();
       })
       .catch((error) => console.log(extractErrorMessage(error)));
   };
@@ -53,13 +59,15 @@ export default function EditerJoueur() {
       .catch((error) => console.log(extractErrorMessage(error)));
   };
 
-  const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handlePlayerChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     if (updatedPlayer) {
       const { name, value } = e.target;
 
       setUpdatedPlayer((prev) => ({
         ...prev!,
-        [name]: name === 'number' ? Number(value) : value, 
+        [name]: name === "number" ? Number(value) : value,
       }));
     }
   };
@@ -76,12 +84,19 @@ export default function EditerJoueur() {
         body: JSON.stringify(updatedPlayer),
       })
         .then(() => {
-          fetchTeams(); 
-          setUpdatedPlayer(null); 
+          fetchTeams();
+          setUpdatedPlayer(null);
         })
         .catch((error) => console.log(extractErrorMessage(error)));
     }
   };
+
+  const options: { value: Status; label: Status }[] = [
+    { value: "Blessé", label: "Blessé" },
+    { value: "Inconnu", label: "Inconnu" },
+    { value: "Opérationnel", label: "Opérationnel" },
+    { value: "Suspendu", label: "Suspendu" },
+  ];
 
   return (
     <>
@@ -97,7 +112,8 @@ export default function EditerJoueur() {
                     <span className="font-bold">Nom :</span> {player.lastname}
                   </h4>
                   <p>
-                    <span className="font-bold">Prénom :</span> {player.firstname}
+                    <span className="font-bold">Prénom :</span>{" "}
+                    {player.firstname}
                   </p>
                   <p>
                     <span className="font-bold">Numéro :</span> {player.number}
@@ -118,8 +134,8 @@ export default function EditerJoueur() {
                   <button
                     className="p-5 bg-yellow-400"
                     onClick={() => {
-                      setSelectedPlayer(player); 
-                      setUpdatedPlayer({ ...player }); 
+                      setSelectedPlayer(player);
+                      setUpdatedPlayer({ ...player });
                     }}
                   >
                     Modifier
@@ -177,9 +193,11 @@ export default function EditerJoueur() {
                 onChange={handlePlayerChange}
                 className="border-2 p-2"
               >
-                <option value="opérationnel">Opérationnel</option>
-                <option value="blessé">Blessé</option>
-                <option value="inactif">Inactif</option>
+                {options.map((option) => (
+                  <>
+                    <option value={option.value}> {option.label}</option>
+                  </>
+                ))}
               </select>
             </div>
             <button type="submit" className="p-4 font-bold bg-green-500 mt-3">
