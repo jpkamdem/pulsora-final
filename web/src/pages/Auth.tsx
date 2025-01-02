@@ -64,7 +64,7 @@ export default function Auth() {
       .catch((error) => setMessage(extractErrorMessage(error)));
 
     return () => controller.abort();
-  }, []);
+  }, [userDatas]);
 
   async function handleRegisterSumbit(e: FormEvent) {
     e.preventDefault();
@@ -86,12 +86,6 @@ export default function Auth() {
         },
       })
         .then(() => setMessage("Utilisateur créé."))
-        .then(() => {
-          fetch("http://localhost:3000/users")
-            .then((res) => res.json())
-            .then((datas) => setUserDatas(datas.data))
-            .catch((error) => setMessage(extractErrorMessage(error)));
-        })
         .catch((error) => extractErrorMessage(error))
         .finally(() => setIsLoading(false));
     } catch (err) {

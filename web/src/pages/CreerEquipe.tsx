@@ -28,7 +28,7 @@ export default function CreerEquipe() {
       .catch((err) => extractErrorMessage(err));
 
     return () => controller.abort();
-  }, []);
+  }, [teamsData]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
