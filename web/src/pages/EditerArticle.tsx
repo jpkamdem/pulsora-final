@@ -1,7 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { TokenType } from "./Auth";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 import { extractErrorMessage } from "../utils/security";
 
 export type Role = "ADMIN" | "USER";
@@ -51,13 +50,15 @@ export default function EditerArticle() {
   });
 
   async function deleteArticle(id: number) {
-    try {
-      await axios.delete(`http://localhost:3000/articles/${id}`, {
-        withCredentials: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    fetch(`http://localhost:3000/articles/${id}`, {
+      method: "DELETE",
+      credentials: "same-origin",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).catch((error) => console.log(error));
   }
 
   const [inputField, setInputField] = useState({
@@ -72,7 +73,7 @@ export default function EditerArticle() {
       throw new Error("ID invalide, aucun article n'a été sélectionné");
     }
 
-    const res = await fetch(`http://localhost:3000/articles/${id}`, {
+    fetch(`http://localhost:3000/articles/${id}`, {
       method: "PUT",
       credentials: "same-origin",
       mode: "cors",
@@ -81,11 +82,7 @@ export default function EditerArticle() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
-
-    if (!res.ok) {
-      throw new Error("Erreur lors de la modification de l'article");
-    }
+    }).catch((error) => console.log(error));
   }
 
   return (

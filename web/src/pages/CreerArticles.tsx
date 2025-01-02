@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import axios from "axios";
 import { TokenType } from "./Auth";
 import { jwtDecode } from "jwt-decode";
 
@@ -19,31 +18,27 @@ export default function CreerArticle() {
       console.log("Il n'y a pas de token dans le local storage");
       return;
     }
+
     const decodedToken: TokenType = jwtDecode(storedToken);
 
-    try {
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-      axios.defaults.withCredentials = true;
-
-      await axios.post(
-        "http://localhost:3000/articles",
-        { title: title, body: body, authorId: decodedToken.id },
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-
-      setMessage("Article créé avec succès");
-      setIsLoading(false);
-      return;
-    } catch (e) {
-      setMessage("Erreur lors de la création de l'article");
-      setIsLoading(false);
-      return;
-    }
+    setIsLoading(true);
+    fetch("http://localhost:3000/articles", {
+      method: "POST",
+      credentials: "same-origin",
+      mode: "cors",
+      body: JSON.stringify({
+        title: title,
+        body: body,
+        authorId: decodedToken.id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(() => setMessage("Article créé avec succès !"))
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
   };
   return (
     <>
