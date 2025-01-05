@@ -36,11 +36,12 @@ export default function Footer() {
             </li>
           </ul>
         </div>
+
       </div>
 
-      <hr className="h-px my-4 bg-blue-900 opacity-65 border-0 mx-16" />
 
       <div className="flex  flex-col md:flex-row justify-between items-center px-16 space-x-6 py-4">
+        
         <nav className="flex space-x-4 text-sm">
           <a href="#" className="hover:underline">
             Accueil

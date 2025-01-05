@@ -1,236 +1,164 @@
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { extractErrorMessage } from "../utils/security";
-
-export type TokenType = {
-  id: number;
-  username: string;
-  iat: number;
-  exp: number;
-};
-
-export const SECRET_KEY = "firstnameBunchOfNumbers4894616";
-
-export type UserType = {
-  username: string;
-  password: string;
-  role: "USER" | "ADMIN";
-  articles: { title: string; body: string; authorId: number }[];
-};
+import axios from "axios"; 
+import { useState, FormEvent, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
 
 export default function Auth() {
-  const [userRegister, setUserRegister] = useState({
-    username: "",
-    password: "",
-  });
-  const [userLogin, setUserLogin] = useState({ username: "", password: "" });
-  const [userDatas, setUserDatas] = useState<UserType[] | null>(null);
+  const [isLogin, setIsLogin] = useState(false); 
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [whichForm, setWhichForm] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); 
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement>,
-    formType: "login" | "register"
-  ) {
-    if (formType === "register") {
-      setUserRegister((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-      return;
+  const navigate = useNavigate(); 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      if (isLogin) {
+        const res = await axios.post("http://localhost:3000/connection/login", formData);
+        localStorage.setItem("token", res.data.token);
+        setMessage("Connexion réussie !");
+      } else {
+        await axios.post("http://localhost:3000/connection/register", formData);
+        setMessage("Votre compte a été créé");
+        setShowPopup(true); 
+
+        setTimeout(() => {
+          setShowPopup(false);
+          setIsLogin(true); 
+        }, 3000);
+      }
+    } catch (error: any) {
+      setMessage(error.response?.data?.message || "Une erreur est survenue.");
+    } finally {
+      setIsLoading(false);
     }
-    setUserLogin((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    return;
-  }
+  };
 
-  const isUserRegisterEmpty =
-    userRegister.password.trim() === "" || userRegister.username.trim() === "";
-  const isUserLoginEmpty =
-    userLogin.password.trim() === "" || userLogin.username.trim() === "";
-
+  // Redirect to home page after successful login or registration
   useEffect(() => {
-    const controller = new AbortController();
-
-    fetch("http://localhost:3000/users", {
-      signal: controller.signal,
-      method: "GET",
-      credentials: "same-origin",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((datas) => setUserDatas(datas.data))
-      .catch((error) => setMessage(extractErrorMessage(error)));
-
-    return () => controller.abort();
-  }, [userDatas]);
-
-  async function handleRegisterSumbit(e: FormEvent) {
-    e.preventDefault();
-    if (isUserRegisterEmpty) {
-      setMessage("Veuillez remplir tous les champs de création d'utilisateur");
-      return;
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // Redirection vers la page d'accueil
     }
-
-    setIsLoading(true);
-    try {
-      fetch("http://localhost:3000/connection/register", {
-        method: "POST",
-        credentials: "same-origin",
-        mode: "cors",
-        body: JSON.stringify(userRegister),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then(() => setMessage("Utilisateur créé."))
-        .catch((error) => extractErrorMessage(error))
-        .finally(() => setIsLoading(false));
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function handleLoginSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (isUserLoginEmpty) {
-      setMessage("Veuillez remplir tous les champs de connexion");
-      return;
-    }
-    if (
-      !userDatas?.some((user) => user.username === userLogin.username.trim())
-    ) {
-      setMessage(`L'utilisateur ${userLogin.username} n'existe pas`);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/connection/login",
-        userLogin,
-        {
-          withCredentials: true,
-        }
-      );
-
-      const token: string = res.data.token;
-      localStorage.setItem("token", token);
-
-      setMessage("Utilisateur vérifié");
-      setIsLoading(false);
-    } catch (err: any) {
-      setMessage(err.response?.data?.message || "Erreur inconnue");
-      setIsLoading(false);
-    }
-  }
+  }, [navigate]);
 
   return (
-    <>
-      <section>
-        <h2 className="text-center p-4 mt-4 flex justify-center">
-          <div>
-            <p
-              className="p-4 text-white bg-slate-800 hover:cursor-pointer hover:bg-white hover:text-slate-800"
-              onClick={() => setWhichForm(true)}
-            >
-              S'inscrire
-            </p>
-            <p
-              className="p-4 text-white bg-slate-800 hover:cursor-pointer hover:bg-white hover:text-slate-800"
-              onClick={() => setWhichForm(false)}
-            >
-              Se connecter
-            </p>
-          </div>
-        </h2>
-        {whichForm ? (
-          <form
-            onSubmit={handleRegisterSumbit}
-            className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
-          >
-            <ul className="w-3/5 h-full pt-4 pb-4 flex flex-col items-center">
-              <li className="w-full flex justify-center">
-                <div className="p-4 w-full">
-                  <p>Nom d'utilisateur</p>
-                  <input
-                    className="border-4 w-full"
-                    type="text"
-                    autoComplete="off"
-                    onChange={(e) => handleChange(e, "register")}
-                    name="username"
-                    value={userRegister.username}
-                  />
-                </div>
-              </li>
-              <li className="w-full h-full flex justify-center">
-                <div className="items-center p-4 w-full h-1/3">
-                  <p>Mot de passe</p>
-                  <input
-                    className="border-4 w-full"
-                    type="password"
-                    autoComplete="off"
-                    onChange={(e) => handleChange(e, "register")}
-                    name="password"
-                    value={userRegister.password}
-                  />
-                </div>
-              </li>
-            </ul>
+    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-blue-900">
+      <button
+        onClick={() => navigate("/")} 
+        className="absolute top-4 left-4 flex items-center text-blue-600 hover:text-blue-800"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        Retour à l'accueil
+      </button>
+
+      <div className="flex w-full max-w-4xl shadow-lg rounded-lg overflow-hidden bg-white">
+        <div className="w-1/2 flex flex-col items-center justify-center">
+          <img
+            src="src/assets/authstade.webp"
+            alt="Illustration"
+            className="w-full h-auto rounded-l-lg  "
+          />
+        </div>
+
+        <div className="w-1/2 p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            {isLogin ? "Connexion" : "Créer un compte"}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium">
+                Nom d'utilisateur
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium">
+                Mot de passe
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                required
+              />
+            </div>
+
             <button
               type="submit"
-              className={`p-4 font-bold 
-          }`}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+              disabled={isLoading}
             >
-              Valider la création d'un utilisateur
+              {isLoading ? "Chargement..." : isLogin ? "Se connecter" : "Créer un compte"}
             </button>
           </form>
-        ) : (
-          <form
-            onSubmit={handleLoginSubmit}
-            className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
-          >
-            <ul className="w-3/5 pt-4 pb-4 items-center">
-              <li className="w-full flex justify-center">
-                <div className="p-4 w-full">
-                  <p>Nom d'utilisateur</p>
-                  <input
-                    className="border-4 w-full"
-                    type="text"
-                    autoComplete="off"
-                    onChange={(e) => handleChange(e, "login")}
-                    name="username"
-                    value={userLogin.username}
-                  />
-                </div>
-              </li>
-              <li className="w-full h-full flex justify-center">
-                <div className="items-center p-4 w-full h-1/3">
-                  <p>Mot de passe</p>
-                  <input
-                    className="border-4 w-full"
-                    type="password"
-                    autoComplete="off"
-                    onChange={(e) => handleChange(e, "login")}
-                    name="password"
-                    value={userLogin.password}
-                  />
-                </div>
-              </li>
-            </ul>
-            <button
-              type="submit"
-              className={`p-4 font-bold 
-          }`}
-            >
-              Valider la connexion
-            </button>
-          </form>
-        )}
-      </section>
-      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
-    </>
+
+          <p className="text-center mt-4">
+            {isLogin ? (
+              <>
+                Pas encore de compte ?{" "}
+                <button
+                  onClick={() => setIsLogin(false)}
+                  className="text-blue-400 hover:underline"
+                >
+                  Inscrivez-vous
+                </button>
+              </>
+            ) : (
+              <>
+                Vous avez déjà un compte ?{" "}
+                <button
+                  onClick={() => setIsLogin(true)}
+                  className="text-blue-400 hover:underline"
+                >
+                  Connectez-vous
+                </button>
+              </>
+            )}
+          </p>
+
+        </div>
+      </div>
+
+      {showPopup && (
+        <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
+          Votre compte a été créé
+        </div>
+      )}
+    </div>
   );
 }
