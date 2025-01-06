@@ -1,15 +1,15 @@
-import axios from "axios"; 
+import axios from "axios";
 import { useState, FormEvent, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(false); 
+  const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false); 
+  const [showPopup, setShowPopup] = useState(false);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,17 +22,20 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:3000/connection/login", formData);
+        const res = await axios.post(
+          "http://localhost:3000/connection/login",
+          formData
+        );
         localStorage.setItem("token", res.data.token);
         setMessage("Connexion réussie !");
       } else {
         await axios.post("http://localhost:3000/connection/register", formData);
         setMessage("Votre compte a été créé");
-        setShowPopup(true); 
+        setShowPopup(true);
 
         setTimeout(() => {
           setShowPopup(false);
-          setIsLogin(true); 
+          setIsLogin(true);
         }, 3000);
       }
     } catch (error: any) {
@@ -53,7 +56,7 @@ export default function Auth() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-blue-900">
       <button
-        onClick={() => navigate("/")} 
+        onClick={() => navigate("/")}
         className="absolute top-4 left-4 flex items-center text-blue-600 hover:text-blue-800"
       >
         <svg
@@ -123,7 +126,11 @@ export default function Auth() {
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
               disabled={isLoading}
             >
-              {isLoading ? "Chargement..." : isLogin ? "Se connecter" : "Créer un compte"}
+              {isLoading
+                ? "Chargement..."
+                : isLogin
+                ? "Se connecter"
+                : "Créer un compte"}
             </button>
           </form>
 
@@ -150,14 +157,16 @@ export default function Auth() {
               </>
             )}
           </p>
-
         </div>
       </div>
 
       {showPopup && (
-        <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
-          Votre compte a été créé
-        </div>
+        <>
+          <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
+            Votre compte a été créé
+          </div>
+          {message ? <p>message</p> : null}
+        </>
       )}
     </div>
   );
