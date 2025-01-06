@@ -2,6 +2,13 @@ import axios from "axios";
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+export type TokenType = {
+  id: number;
+  username: string;
+  iat: number;
+  exp: number;
+};
+
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
