@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthStade from "../assets/authstade.webp";
 
 export type TokenType = {
   id: number;
@@ -82,11 +83,10 @@ export default function Auth() {
         </svg>
         Retour à l'accueil
       </button>
-
       <div className="flex w-full max-w-4xl shadow-lg rounded-lg overflow-hidden bg-white">
         <div className="w-1/2 flex flex-col items-center justify-center">
           <img
-            src="src/assets/authstade.webp"
+            src={AuthStade}
             alt="Illustration"
             className="w-full h-auto rounded-l-lg  "
           />
@@ -166,7 +166,6 @@ export default function Auth() {
           </p>
         </div>
       </div>
-
       {showPopup && (
         <>
           <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
@@ -175,6 +174,10 @@ export default function Auth() {
           {message ? <p>message</p> : null}
         </>
       )}
+      <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
+        Votre compte a été créé
+      </div>
+      ){message ? null : null}
     </div>
   );
 }
