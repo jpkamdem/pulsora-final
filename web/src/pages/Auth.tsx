@@ -28,6 +28,15 @@ export default function Auth() {
     setIsLoading(true);
     setMessage("");
 
+    // Vérification si le nom d'utilisateur et le mot de passe sont identiques
+    if (!isLogin && formData.username === formData.password) {
+      setMessage("Le nom d'utilisateur et le mot de passe ne doivent pas être identiques.");
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       if (isLogin) {
         const res = await axios.post(
@@ -36,28 +45,35 @@ export default function Auth() {
         );
         localStorage.setItem("token", res.data.token);
         setMessage("Connexion réussie !");
-      } else {
-        await axios.post("http://localhost:3000/connection/register", formData);
-        setMessage("Votre compte a été créé");
         setShowPopup(true);
 
         setTimeout(() => {
           setShowPopup(false);
-          setIsLogin(true);
+          navigate("/"); // Redirection après connexion réussie
+        }, 2000);
+      } else {
+        await axios.post("http://localhost:3000/connection/register", formData);
+        setMessage("Votre compte a été créé !");
+        setShowPopup(true);
+
+        setTimeout(() => {
+          setShowPopup(false);
+          setIsLogin(true); // Passe au mode connexion après inscription
         }, 3000);
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Une erreur est survenue.");
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Redirect to home page after successful login or registration
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/"); // Redirection vers la page d'accueil
+      navigate("/"); // Redirection vers la page d'accueil si déjà connecté
     }
   }, [navigate]);
 
@@ -88,7 +104,7 @@ export default function Auth() {
           <img
             src={AuthStade}
             alt="Illustration"
-            className="w-full h-auto rounded-l-lg  "
+            className="w-full h-auto rounded-l-lg"
           />
         </div>
 
@@ -167,16 +183,10 @@ export default function Auth() {
         </div>
       </div>
       {showPopup && (
-        <>
-          <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
-            Votre compte a été créé
-          </div>
-          {message ? <p>{message}</p> : null}
-        </>
+        <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
+          {message}
+        </div>
       )}
-      {/* <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
-        Votre compte a été créé
-      </div> */}
     </div>
   );
 }

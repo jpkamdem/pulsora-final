@@ -58,11 +58,7 @@ export default function Header() {
               </Link>
             </li>
 
-            <Link to="/authentification">
-              <li className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded uppercase">
-                Authentification
-              </li>
-            </Link>
+
 
             <li>
               <Link
