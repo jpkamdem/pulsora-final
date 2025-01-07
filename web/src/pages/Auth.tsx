@@ -171,13 +171,12 @@ export default function Auth() {
           <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
             Votre compte a été créé
           </div>
-          {message ? <p>message</p> : null}
+          {message ? <p>{message}</p> : null}
         </>
       )}
-      <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
+      {/* <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
         Votre compte a été créé
-      </div>
-      ){message ? null : null}
+      </div> */}
     </div>
   );
 }
