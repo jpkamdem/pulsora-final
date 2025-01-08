@@ -49,13 +49,12 @@ export default function Header() {
             <li>
               <img src={pulsoraOne} alt="Logo Pulsora" className="w-10 h-11" />
             </li>
-            <NavLinks label="accueil" />
+            <NavLinks label="accueil" path="home" />
             <NavLinks label="articles" />
             <NavLinks label="nutrition" />
             <NavLinks label="saison" />
             <NavLinks label="equipe" />
             <NavLinks label="contact" />
-            <NavLinks label="profil" />
             <li>
               <Link
                 to="/profil"
