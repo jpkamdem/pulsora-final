@@ -100,14 +100,17 @@ export default function EditerJoueur() {
 
   return (
     <>
-      <div>
+    <div className="flex justify-between p-8">
+
+    
+      <div className="flex flex-col">
         <h2 className="font-bold text-lg">Liste des joueurs</h2>
-        <ul className="overflow-y-scroll h-64">
+        <ul className="overflow-y-scroll h-96">
           {teams.map((team) => (
             <div key={team.id}>
               <h3 className="font-bold">{team.name}</h3>
               {team.players.map((player: PlayerInterface) => (
-                <li key={player.id} className="p-4">
+                <li key={player.id} className="bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm p-4 m-2">
                   <h4>
                     <span className="font-bold">Nom :</span> {player.lastname}
                   </h4>
@@ -126,13 +129,13 @@ export default function EditerJoueur() {
                   </p>
 
                   <button
-                    className="p-5 bg-red-500"
+                    className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
                     onClick={() => deletePlayer(player.id)}
                   >
                     Supprimer
                   </button>
                   <button
-                    className="p-5 bg-yellow-400"
+                    className="p-3 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition duration-200 ml-4"
                     onClick={() => {
                       setSelectedPlayer(player);
                       setUpdatedPlayer({ ...player });
@@ -148,50 +151,51 @@ export default function EditerJoueur() {
       </div>
 
       {updatedPlayer && (
-        <div className="mt-5">
-          <h3>Modifier le joueur</h3>
-          <form onSubmit={handlePlayerSubmit} className="border p-5">
+        <div className="flex justify-self-start  p-6 ">
+          <form onSubmit={handlePlayerSubmit} className="border-solid flex flex-col items-center m-auto border-2 p-4 bg-gray-100 border-2 border-gray-300 rounded-lg shadow-md">
+          <h3 className="text-xl font-bold text-gray-800  text-center mb-6">Modifier le joueur</h3>
+
             <div>
-              <label htmlFor="lastname">Nom:</label>
+              <label className="block text-gray-700 font-semibold" htmlFor="lastname">Nom:</label>
               <input
                 id="lastname"
                 name="lastname"
                 type="text"
                 value={updatedPlayer.lastname}
                 onChange={handlePlayerChange}
-                className="border-2 p-2"
+                className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="mt-2">
-              <label htmlFor="firstname">Prénom:</label>
+              <label className="block text-gray-700 font-semibold" htmlFor="firstname">Prénom:</label>
               <input
                 id="firstname"
                 name="firstname"
                 type="text"
                 value={updatedPlayer.firstname}
                 onChange={handlePlayerChange}
-                className="border-2 p-2"
+                className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="mt-2">
-              <label htmlFor="number">Numéro:</label>
+              <label className="block text-gray-700 font-semibold" htmlFor="number">Numéro:</label>
               <input
                 id="number"
                 name="number"
                 type="number"
                 value={updatedPlayer.number}
                 onChange={handlePlayerChange}
-                className="border-2 p-2"
+                className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="mt-2">
-              <label htmlFor="status">Forme:</label>
+              <label className="block text-gray-700 font-semibold" htmlFor="status">Forme:</label>
               <select
                 id="status"
                 name="status"
                 value={updatedPlayer.status}
                 onChange={handlePlayerChange}
-                className="border-2 p-2"
+                className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {options.map((option) => (
                   <>
@@ -200,13 +204,14 @@ export default function EditerJoueur() {
                 ))}
               </select>
             </div>
-            <button type="submit" className="p-4 font-bold bg-green-500 mt-3">
+            <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-bold mt-8">
               Sauvegarder
             </button>
           </form>
         </div>
       )}
       {selectedPlayer ? null : null}
+    </div>
     </>
   );
 }

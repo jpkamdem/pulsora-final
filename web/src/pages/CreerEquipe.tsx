@@ -71,26 +71,43 @@ export default function CreerEquipe() {
     <>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
+        className="flex flex-col mx-auto mt-6 items-center w-full max-w-2xl p-8 "
       >
-        <ul className="w-3/5 h-full pt-4 pb-4 flex flex-col items-center">
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Nom de l'équipe</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                autoComplete="off"
-                onChange={(e) => setTeamName(e.target.value)}
-              />
-            </div>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Créer une équipe
+        </h2>
+
+        <ul className="w-full space-y-6">
+          <li>
+            <label htmlFor="teamName" className="block text-gray-700 font-semibold">
+              Nom de l'équipe
+            </label>
+            <input
+              id="teamName"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              autoComplete="off"
+              onChange={(e) => setTeamName(e.target.value)}
+              value={teamName}
+              placeholder="Entrez le nom de l'équipe"
+            />
           </li>
         </ul>
-        <button type="submit" className={`p-4 font-bold`} disabled={isEmpty}>
-          Créer
+
+        <button
+          type="submit"
+          disabled={isEmpty}
+          className={`mt-6 p-4 w-full rounded-md font-semibold text-white ${
+            !isEmpty
+              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer transition duration-300"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
+        >
+          {isLoading ? "Création en cours..." : "Créer l'équipe"}
         </button>
       </form>
-      {isLoading ? <VideoLoading /> : <p>{message}</p>}
+
+      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
     </>
   );
 }

@@ -87,19 +87,17 @@ export default function EditerArticle() {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between p-8">
         <div className="flex flex-col">
-          <h2 className="font-bold text-lg">Liste de vos articles</h2>
-          <ul className="overflow-y-scroll h-64">
+          <h2 className="font-bold text-lg text-center">Liste de vos articles</h2>
+          <ul className="">
             {usersDatas.map((user, index) => (
               <div key={index}>
                 {user.articles.map((article, indexx) => (
                   <>
                     {article.authorId === decodedToken.id ? (
-                      <li className="p-4" key={indexx}>
-                        <p>
-                          <span className="font-bold">ID :</span> {article.id}
-                        </p>
+                      <li className="bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm p-4 m-2" key={indexx}>
+            
                         <p>
                           <span className="font-bold">Titre :</span>{" "}
                           {article.title}
@@ -110,12 +108,12 @@ export default function EditerArticle() {
                         </p>
                         <button
                           onClick={() => deleteArticle(article.id)}
-                          className="p-5 bg-red-500"
+                          className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
                         >
                           Supprimer
                         </button>
                         <button
-                          className="p-5 bg-yellow-400"
+                          className="p-3 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition duration-200 ml-4"
                           onClick={() => {
                             setInputField((prev) => ({
                               ...prev,
@@ -135,18 +133,18 @@ export default function EditerArticle() {
           </ul>
         </div>
         {inputField.showUpdateField ? (
-          <div className="flex justify-self-start">
+          <div className="flex justify-end w-1/2 p-6 bg-gray-100 border-2 border-gray-300 rounded-lg shadow-md">
             <form
-              className="border-solid flex flex-col items-center m-auto border-2"
-              onSubmit={(e) => editArticle(e, inputField.articleId)}
-            >
-              <p>ID: {inputField.articleId} </p>
+              className="flex flex-col space-y-6"
+              onSubmit={(e) => editArticle(e, inputField.articleId)}>
+              <h4 className="text-xl font-bold text-gray-800  text-center"> Modifier l'article</h4>
               <ul>
                 <li>
-                  <label>Titre</label>
+                  <label className="block text-gray-700 font-semibold" >Titre</label>
                   <input
-                    className="border-4 w-full"
+                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     name="title"
+                    placeholder="Modifiez le titre de l'article"
                     onChange={(e) =>
                       setUpdatedArticle((prev) => ({
                         ...prev,
@@ -157,7 +155,7 @@ export default function EditerArticle() {
                   />
                 </li>
                 <li>
-                  <label>Contenu</label>
+                  <label className="block text-gray-700 font-semibold" >Contenu</label>
                   <textarea
                     name="body"
                     onChange={(e) =>
@@ -166,11 +164,13 @@ export default function EditerArticle() {
                         body: e.target.value,
                       }))
                     }
-                    className="border-4 resize-none w-full h-full"
+                    className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    placeholder="Modifiez le contenu de votre article"
+
                   ></textarea>
                 </li>
               </ul>
-              <button type="submit" className="p-4 font-bold">
+              <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-bold">
                 Modifier
               </button>
             </form>

@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function GererJoueur() {
   return (
-    <div className="w-1/2 mx-auto p-8 bg-white rounded-lg shadow-lg relative">
+    <div className="w-3/5 mx-auto p-8 bg-white rounded-lg shadow-lg relative">
       {/* Croissance positionnée en haut à droite */}
       <Link to="/profil">
         <button

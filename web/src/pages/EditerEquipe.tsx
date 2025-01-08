@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
-import { TeamInterface } from "./Equipe"; 
+import { TeamInterface } from "./Equipe"; // Assurez-vous que l'interface TeamInterface est bien définie
 import { extractErrorMessage } from "../utils/security";
 
 export default function EditerEquipe() {
@@ -25,7 +25,7 @@ export default function EditerEquipe() {
       console.log(extractErrorMessage(error));
     }
   }
-
+ 
   useEffect(() => {
     fetchTeams();
   }, []);
@@ -93,11 +93,16 @@ export default function EditerEquipe() {
 
   return (
     <>
-      <div>
-        <h2 className="font-bold text-lg">Liste des équipes</h2>
-        <ul className="overflow-y-scroll h-64">
+    <div className="flex justify-between p-8">
+
+    
+      <div className="flex flex-col">
+
+
+        <h2 className="font-bold text-lg text-center mt-10">Liste des équipes</h2>
+        <ul className="">
           {teamsData.map((team) => (
-            <li key={team.id} className="p-4">
+            <li key={team.id} className="bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm p-4 m-2">
               <h3>
                 <span className="font-bold">Nom de l'équipe :</span> {team.name}
               </h3>
@@ -108,13 +113,13 @@ export default function EditerEquipe() {
                 <span className="font-bold">Défaites :</span> {team.loses}
               </p>
               <button
-                className="p-5 bg-red-500"
+                className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
                 onClick={() => deleteTeam(team.id)}
               >
                 Supprimer
               </button>
               <button
-                className="p-5 bg-yellow-400"
+                className="p-3 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition duration-200 ml-4"
                 onClick={() => handleEdit(team)} 
               >
                 Modifier
@@ -126,17 +131,17 @@ export default function EditerEquipe() {
 
 
       {selectedTeam && (
-        <div className="flex justify-self-start mt-4">
+        <div className="flex justify-self-start  p-6 ">
           <form
-            className="border-solid flex flex-col items-center m-auto border-2 p-4"
+            className="border-solid flex flex-col items-center m-auto border-2 p-4 bg-gray-100 border-2 border-gray-300 rounded-lg shadow-md"
             onSubmit={(e) => editTeam(e, selectedTeam.id)}
           >
-            <h3 className="font-bold">Modifier l'équipe</h3>
+            <h3 className="text-xl font-bold text-gray-800  text-center">Modifier l'équipe</h3>
             <ul>
               <li>
-                <label>Nom de l'équipe</label>
+                <label className="block text-gray-700 font-semibold">Nom de l'équipe</label>
                 <input
-                  className="border-4 w-full"
+                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="name"
                   value={updatedTeam?.name || ""}
                   onChange={(e) =>
@@ -149,9 +154,9 @@ export default function EditerEquipe() {
                 />
               </li>
               <li>
-                <label>Victoires</label>
+                <label className="block text-gray-700 font-semibold">Victoires</label>
                 <input
-                  className="border-4 w-full"
+                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="wins"
                   value={updatedTeam?.wins || 0}
                   onChange={(e) =>
@@ -164,9 +169,9 @@ export default function EditerEquipe() {
                 />
               </li>
               <li>
-                <label>Défaites</label>
+                <label  className="block text-gray-700 font-semibold">Défaites</label>
                 <input
-                  className="border-4 w-full"
+                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-10"
                   name="loses"
                   value={updatedTeam?.loses || 0}
                   onChange={(e) =>
@@ -179,12 +184,13 @@ export default function EditerEquipe() {
                 />
               </li>
             </ul>
-            <button type="submit" className="p-4 font-bold bg-green-500 text-white">
+            <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-bold">
               Modifier l'équipe
             </button>
           </form>
         </div>
       )}
+    </div>
     </>
   );
 }

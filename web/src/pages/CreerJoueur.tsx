@@ -88,7 +88,7 @@ export default function CreerJoueur() {
         throw new Error(errorData.message || "Erreur inconnue du serveur");
       }
 
-      setMessage("Jouer créé.");
+      setMessage("Joueur créé.");
     } catch (err: any) {
       console.log(err);
       setMessage(err.message || "Erreur lors de la création d'un joueur");
@@ -101,87 +101,115 @@ export default function CreerJoueur() {
     <>
       <form
         onSubmit={(e: FormEvent) => handleFormSubmit(e)}
-        className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
+        className="flex flex-col mx-auto mt-6 items-center w-full max-w-2xl p-8 "
       >
-        <ul className="w-3/5 h-full pt-4 pb-4 flex flex-col items-center">
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Prénom</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                autoComplete="off"
-                name="firstname"
-                onChange={handleChange}
-              />
-            </div>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Créer un joueur
+        </h2>
+
+        <ul className="w-full space-y-6">
+          <li>
+            <label htmlFor="firstname" className="block text-gray-700 font-semibold">
+              Prénom
+            </label>
+            <input
+              id="firstname"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              name="firstname"
+              autoComplete="off"
+              onChange={handleChange}
+              value={player.firstname}
+              placeholder="Entrez le prénom du joueur"
+            />
           </li>
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Nom</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                autoComplete="off"
-                name="lastname"
-                onChange={handleChange}
-              />
-            </div>
+
+          <li>
+            <label htmlFor="lastname" className="block text-gray-700 font-semibold">
+              Nom
+            </label>
+            <input
+              id="lastname"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              name="lastname"
+              autoComplete="off"
+              onChange={handleChange}
+              value={player.lastname}
+              placeholder="Entrez le nom du joueur"
+            />
           </li>
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Numéro</p>
-              <input
-                className="border-4 w-full"
-                type="number"
-                autoComplete="off"
-                name="number"
-                onChange={handleChange}
-              />
-            </div>
+
+          <li>
+            <label htmlFor="number" className="block text-gray-700 font-semibold">
+              Numéro
+            </label>
+            <input
+              id="number"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="number"
+              name="number"
+              onChange={handleChange}
+              value={player.number}
+              placeholder="Entrez le numéro du joueur"
+            />
           </li>
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Poste</p>
-              <select
-                defaultValue={undefined}
-                onChange={handleChangeSelect}
-                name="position"
-              >
-                <option value="">{undefined} </option>
-                {options.map((option, index) => (
-                  <>
-                    <option key={index} value={option.value}>
-                      {option.label}
-                    </option>
-                  </>
-                ))}
-              </select>
-            </div>
-          </li>
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p className="capitalize">équipe</p>
-              <select onChange={handleChangeSelect} name="teamId">
-                <option defaultValue={undefined} value="">
-                  {undefined}
+
+          <li>
+            <label htmlFor="position" className="block text-gray-700 font-semibold">
+              Poste
+            </label>
+            <select
+              id="position"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="position"
+              value={player.position}
+              onChange={handleChangeSelect}
+            >
+              <option value="">Sélectionner un poste</option>
+              {options.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
                 </option>
-                {teamsData.map((team, index) => (
-                  <>
-                    <option key={index} value={team.id}>
-                      {team.name}
-                    </option>
-                  </>
-                ))}
-              </select>
-            </div>
+              ))}
+            </select>
+          </li>
+
+          <li>
+            <label htmlFor="teamId" className="block text-gray-700 font-semibold">
+              Équipe
+            </label>
+            <select
+              id="teamId"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="teamId"
+              value={player.teamId}
+              onChange={handleChangeSelect}
+            >
+              <option value="">Sélectionner une équipe</option>
+              {teamsData.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {team.name}
+                </option>
+              ))}
+            </select>
           </li>
         </ul>
-        <button type="submit" className={`p-4 font-bold`} disabled={isEmpty}>
-          Créer
+
+        <button
+          type="submit"
+          className={`mt-6 p-4 w-full rounded-md font-semibold text-white ${
+            !isEmpty
+              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer transition duration-300"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
+          disabled={isEmpty}
+        >
+          {isLoading ? "Création en cours..." : "Créer le joueur"}
         </button>
       </form>
-      {isLoading ? <VideoLoading /> : <p>{message}</p>}
+
+      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
     </>
   );
 }

@@ -41,49 +41,62 @@ export default function CreerArticle() {
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
   };
+
   return (
     <>
       <form
-        className="flex flex-col m-auto mt-6 items-center w-1/2 h-3/4 p-4 border-solid  border-2"
+        className="flex flex-col mx-auto mt-6 items-center w-full max-w-2xl p-8"
         onSubmit={handleForm}
       >
-        <ul className="w-3/5 h-full pt-4 pb-4 flex flex-col items-center">
-          <li className="w-full flex justify-center">
-            <div className="p-4 w-full">
-              <p>Titre de l'article</p>
-              <input
-                className="border-4 w-full"
-                type="text"
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-                autoComplete="off"
-              />
-            </div>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Créer un nouvel article
+        </h2>
+
+        <ul className="w-full space-y-6">
+          <li>
+            <label htmlFor="title" className="block text-gray-700 font-semibold">
+              Titre de l'article
+            </label>
+            <input
+              id="title"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              autoComplete="off"
+              placeholder="Entrez le titre de l'article"
+            />
           </li>
-          <li className="w-full h-full flex justify-center">
-            <div className="items-center p-4 w-full h-1/3">
-              <p>Contenu de l'article</p>
-              <textarea
-                className="border-4 resize-none w-full h-full"
-                onChange={(e) => setBody(e.target.value)}
-                value={body}
-              ></textarea>
-            </div>
+
+          <li>
+            <label htmlFor="body" className="block text-gray-700 font-semibold">
+              Contenu de l'article
+            </label>
+            <textarea
+              id="body"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              onChange={(e) => setBody(e.target.value)}
+              value={body}
+              placeholder="Écrivez le contenu de votre article"
+              rows={4}
+            ></textarea>
           </li>
         </ul>
+
         <button
           type="submit"
           disabled={isEmpty}
-          className={`p-4 font-bold ${
+          className={`mt-6 p-4 w-full rounded-md font-semibold text-white ${
             !isEmpty
-              ? "hover:bg-slate-800 hover:text-white cursor-pointer"
-              : "cursor-not-allowed"
+              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer transition duration-300"
+              : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          Créer
+          {isLoading ? "Création en cours..." : "Créer l'article"}
         </button>
       </form>
-      {isLoading ? <VideoLoading /> : <p>{message}</p>}
+
+      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
     </>
   );
 }
