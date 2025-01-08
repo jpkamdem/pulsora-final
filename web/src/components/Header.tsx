@@ -55,7 +55,6 @@ export default function Header() {
             <NavLinks label="saison" />
             <NavLinks label="equipe" />
             <NavLinks label="contact" />
-            <NavLinks label="profil" />
             <li>
               <Link
                 to="/profil"
