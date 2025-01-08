@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
 import { extractErrorMessage } from "../utils/security";
+import VideoLoading from "../components/VideoLoading";
 
 export default function CreerEquipe() {
   const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
@@ -89,7 +90,7 @@ export default function CreerEquipe() {
           Créer
         </button>
       </form>
-      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
+      {isLoading ? <VideoLoading /> : <p>{message}</p>}
     </>
   );
 }

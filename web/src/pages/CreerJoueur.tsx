@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { TeamInterface } from "./Equipe";
+import VideoLoading from "../components/VideoLoading";
 
 export type Position = "GK" | "DEF" | "MF" | "FW" | undefined;
 
@@ -180,7 +181,7 @@ export default function CreerJoueur() {
           Créer
         </button>
       </form>
-      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
+      {isLoading ? <VideoLoading /> : <p>{message}</p>}
     </>
   );
 }

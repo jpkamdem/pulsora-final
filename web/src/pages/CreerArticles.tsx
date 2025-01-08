@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { TokenType } from "./Auth";
 import { jwtDecode } from "jwt-decode";
+import VideoLoading from "../components/VideoLoading";
 
 export default function CreerArticle() {
   const [message, setMessage] = useState("");
@@ -82,7 +83,7 @@ export default function CreerArticle() {
           Créer
         </button>
       </form>
-      {isLoading ? <p>Chargement...</p> : <p>{message}</p>}
+      {isLoading ? <VideoLoading /> : <p>{message}</p>}
     </>
   );
 }
