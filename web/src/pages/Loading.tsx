@@ -8,7 +8,7 @@ export default function VideoWithAutoEnter() {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/home");
-    }, 5500);
+    }, 4900);
 
     return () => clearTimeout(timer);
   }, [navigate]);

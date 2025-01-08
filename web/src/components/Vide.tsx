@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import VideoLoading from "./VideoLoading";
+
 type Options = "articles" | "matchs" | "équipes";
 
 type Props = {
@@ -21,7 +24,18 @@ export default function Vide({ title }: Props) {
     <>
       <div className="flex flex-col items-center justify-center w-1/4 h-[30dvh] m-auto mt-16">
         <p className="text-2xl">{sentenceEnd(title)}</p>
-        <div className="bg-slate-800 p-6 text-white mt-6"></div>
+        {title === "matchs" ? (
+          <Link to="/generer-">
+            <button className="bg-slate-800 p-6 text-white mt-6 hover:bg-white hover:text-slate-800">
+              Générer un match
+            </button>
+          </Link>
+        ) : (
+          <>
+            {/* <div className="bg-slate-800 p-6 text-white mt-6"></div> */}
+            <VideoLoading />
+          </>
+        )}
       </div>
     </>
   );
