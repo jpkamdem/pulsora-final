@@ -52,25 +52,35 @@ export default function Header() {
             <li>
               <Link
                 to="/"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
                 ACCUEIL
               </Link>
             </li>
 
-
-
             <li>
               <Link
                 to="/articles"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
                 ARTICLES
               </Link>
             </li>
 
             <li>
               <Link
+                to="/nutrition"
+                className="uppercase text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
+                nutrition
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 to="/saison"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
                 SAISON
               </Link>
             </li>
@@ -78,7 +88,8 @@ export default function Header() {
             <li>
               <Link
                 to="/equipe"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
                 EQUIPE
               </Link>
             </li>
@@ -86,7 +97,8 @@ export default function Header() {
             <li>
               <Link
                 to="/contact"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded"
+              >
                 CONTACT
               </Link>
             </li>
@@ -94,7 +106,8 @@ export default function Header() {
             <li>
               <Link
                 to="/profil"
-                className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded"
+              >
                 <img src={userIcon} alt="Logo User" className="w-8 h8" />
               </Link>
             </li>
