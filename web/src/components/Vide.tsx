@@ -1,11 +1,11 @@
-type options = "articles" | "matchs" | "équipes";
+type Options = "articles" | "matchs" | "équipes";
 
 type Props = {
-  title: "articles" | "matchs" | "équipes";
+  title: Options;
 };
 
 export default function Vide({ title }: Props) {
-  function sentenceEnd(prop: options) {
+  function sentenceEnd(prop: Options) {
     if (prop === "articles") {
       return `Aucun article n'a encore été publié.`;
     }
