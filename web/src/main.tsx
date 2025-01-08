@@ -22,6 +22,7 @@ import EditerJoueur from "./pages/EditerJoueur";
 import EditerEquipe from "./pages/EditerEquipe";
 import Loading from "./pages/Loading";
 import Nutrition from "./pages/Nutrition";
+import NotFound from "./components/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Loading />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
       {
         path: "home",
