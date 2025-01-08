@@ -3,7 +3,6 @@ import { Link, Outlet } from "react-router-dom";
 export default function GererArticle() {
   return (
     <div className="w-1/2 mx-auto p-8 bg-white rounded-lg shadow-lg relative">
-      {/* Croissance positionnée en haut à droite */}
       <Link to="/profil">
         <button
           className="absolute top-4 right-4 text-blue-600 hover:text-blue-800">
@@ -19,10 +18,8 @@ export default function GererArticle() {
         </button>
       </Link>
 
-      {/* Titre centré */}
       <h2 className="text-center pb-4 text-2xl mt-2">Gestion des articles</h2>
 
-      {/* Section des actions (Créer / Éditer) */}
       <section className="flex justify-evenly">
         <Link to="/profil/articles/creer">
           <div className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg w-full">

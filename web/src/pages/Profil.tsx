@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom"; // Ajoutez useLocation
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom"; 
 import { TokenType } from "./Auth";
 import { jwtDecode } from "jwt-decode"; 
 
 export default function Profil() {
   const [decodedToken, setDecodedToken] = useState<TokenType | null>(null);
-  const [showButtons, setShowButtons] = useState(true); // Etat pour gérer la visibilité des boutons
+  const [showButtons, setShowButtons] = useState(true); 
   const navigate = useNavigate(); 
-  const location = useLocation(); // Permet de savoir où nous nous trouvons
+  const location = useLocation(); 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -36,7 +36,6 @@ export default function Profil() {
     }
   }, []);
 
-  // Lorsqu'on change de route, on cache les boutons si on n'est pas sur "/profil"
   useEffect(() => {
     if (location.pathname !== "/profil") {
       setShowButtons(false);

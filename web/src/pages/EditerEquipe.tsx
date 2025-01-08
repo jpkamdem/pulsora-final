@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
-import { TeamInterface } from "./Equipe"; // Assurez-vous que l'interface TeamInterface est bien définie
+import { TeamInterface } from "./Equipe"; 
 import { extractErrorMessage } from "../utils/security";
 
 export default function EditerEquipe() {
