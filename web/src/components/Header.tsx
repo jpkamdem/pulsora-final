@@ -5,6 +5,7 @@ import menu from "../assets/menu.png";
 import pulsoraLogo from "../assets/pulsora-logo.png";
 import pulsoraOne from "../assets/pulsora-1.png";
 import userIcon from "../assets/user.png";
+import NavLinks from "./NavLinks";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,53 +49,18 @@ export default function Header() {
             <li>
               <img src={pulsoraOne} alt="Logo Pulsora" className="w-10 h-11" />
             </li>
-
-            <li>
-              <Link
-                to="/"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
-                ACCUEIL
-              </Link>
-            </li>
-
-
-
-            <li>
-              <Link
-                to="/articles"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
-                ARTICLES
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/saison"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
-                SAISON
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/equipe"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
-                EQUIPE
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/contact"
-                className="text-couleurprincipale font-bold text-lg tracking-wide hover:bg-gray-100 rounded">
-                CONTACT
-              </Link>
-            </li>
-
+            <NavLinks label="accueil" />
+            <NavLinks label="articles" />
+            <NavLinks label="nutrition" />
+            <NavLinks label="saison" />
+            <NavLinks label="equipe" />
+            <NavLinks label="contact" />
+            <NavLinks label="profil" />
             <li>
               <Link
                 to="/profil"
-                className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded">
+                className="text-couleurprincipale font-bold text-lg tracking-wide px-4 py-2 rounded"
+              >
                 <img src={userIcon} alt="Logo User" className="w-8 h8" />
               </Link>
             </li>

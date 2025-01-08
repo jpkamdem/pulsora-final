@@ -1,3 +1,11 @@
+import facebookIcon from "../assets/social/facebook.png";
+import instagramIcon from "../assets/social/instagram.png";
+import linkedinIcon from "../assets/social/linkedin.png";
+import snapchatIcon from "../assets/social/snapchat.png";
+import twitterIcon from "../assets/social/twitter.png";
+import emailIcon from "../assets/social/email.png";
+import teamImage from "../assets/social/equipebmf.jpg";
+
 export default function Contact() {
   return (
     <>
@@ -27,8 +35,7 @@ export default function Contact() {
         <section className="relative py-12">
           <div className="max-w-5xl mx-auto hidden lg:block">
             <img
-              // image
-              src="src/assets/equipebmf.jpg"
+              src={teamImage}
               alt="Photo d'équipe"
               className="mx-auto rounded-lg shadow-lg"
             />
@@ -40,7 +47,7 @@ export default function Contact() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
               <a href="www.facebook.com" className="flex flex-col items-center">
                 <img
-                  src="src/assets/facebook.png"
+                  src={facebookIcon}
                   alt="Facebook"
                   className="w-12 h-12 mb-2"
                 />
@@ -51,7 +58,7 @@ export default function Contact() {
                 className="flex flex-col items-center"
               >
                 <img
-                  src="src/assets/instagram.png"
+                  src={instagramIcon}
                   alt="Instagram"
                   className="w-12 h-12 mb-2"
                 />
@@ -59,7 +66,7 @@ export default function Contact() {
               </a>
               <a href="www.snapchat.com" className="flex flex-col items-center">
                 <img
-                  src="src/assets/snapchat.png"
+                  src={snapchatIcon}
                   alt="Snapchat"
                   className="w-12 h-12 mb-2"
                 />
@@ -67,7 +74,7 @@ export default function Contact() {
               </a>
               <a href="www.linkedin.fr" className="flex flex-col items-center">
                 <img
-                  src="src/assets/linkedin.png"
+                  src={linkedinIcon}
                   alt="LinkedIn"
                   className="w-12 h-12 mb-2"
                 />
@@ -75,18 +82,14 @@ export default function Contact() {
               </a>
               <a href="www.x.com" className="flex flex-col items-center">
                 <img
-                  src="src/assets/twitter.png"
+                  src={twitterIcon}
                   alt="Twitter"
                   className="w-12 h-12 mb-2"
                 />
                 <span>@bmf</span>
               </a>
               <a href="www.gmail.com" className="flex flex-col items-center">
-                <img
-                  src="src/assets/email.png"
-                  alt="Mail"
-                  className="w-12 h-12 mb-2"
-                />
+                <img src={emailIcon} alt="Mail" className="w-12 h-12 mb-2" />
                 <span>bmf@edu.univ-eiffeil.fr</span>
               </a>
             </div>
