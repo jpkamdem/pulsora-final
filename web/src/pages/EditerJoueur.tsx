@@ -206,6 +206,7 @@ export default function EditerJoueur() {
           </form>
         </div>
       )}
+      {selectedPlayer ? null : null}
     </>
   );
 }
