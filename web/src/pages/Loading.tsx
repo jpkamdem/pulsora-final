@@ -10,8 +10,10 @@ export default function VideoWithButton() {
     }, 0);
   };
 
+  
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="absolute inset-0 flex flex-col items-center justify-center min-h-screen bg-white">
       <video
         autoPlay
         loop

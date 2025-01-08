@@ -9,7 +9,10 @@ import pulsoraLogo from "../assets/pulsora-1.png";
 export default function Footer() {
   const location = useLocation(); 
 
-  const hrHeightClass = location.pathname === "/authentification" ? "h-[0px]" : "h-[1px]";
+  const hrHeightClass = (location.pathname === "/authentification" || location.pathname === "/")
+  ? "h-[0px]"
+  : "h-[1px]";
+
 
   return (
     <footer className="bg-white text-blue-800">

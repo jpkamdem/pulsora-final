@@ -28,7 +28,6 @@ export default function Auth() {
     setIsLoading(true);
     setMessage("");
 
-    // Vérification si le nom d'utilisateur et le mot de passe sont identiques
     if (!isLogin && formData.username === formData.password) {
       setMessage("Le nom d'utilisateur et le mot de passe ne doivent pas être identiques.");
       setShowPopup(true);
@@ -49,7 +48,7 @@ export default function Auth() {
 
         setTimeout(() => {
           setShowPopup(false);
-          navigate("/"); // Redirection après connexion réussie
+          navigate("/"); 
         }, 2000);
       } else {
         await axios.post("http://localhost:3000/connection/register", formData);
@@ -58,7 +57,7 @@ export default function Auth() {
 
         setTimeout(() => {
           setShowPopup(false);
-          setIsLogin(true); // Passe au mode connexion après inscription
+          setIsLogin(true); 
         }, 3000);
       }
     } catch (error: any) {
@@ -73,7 +72,7 @@ export default function Auth() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/"); // Redirection vers la page d'accueil si déjà connecté
+      navigate("/"); 
     }
   }, [navigate]);
 
@@ -81,19 +80,15 @@ export default function Auth() {
     <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-blue-900">
       <button
         onClick={() => navigate("/")}
-        className="absolute top-4 left-4 flex items-center text-blue-600 hover:text-blue-800"
-      >
+        className="absolute top-4 left-4 flex items-center text-blue-600 hover:text-blue-800">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 mr-2"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round"
             d="M15 19l-7-7 7-7"
           />
         </svg>
@@ -101,10 +96,7 @@ export default function Auth() {
       </button>
       <div className="flex w-full max-w-4xl shadow-lg rounded-lg overflow-hidden bg-white">
         <div className="w-1/2 flex flex-col items-center justify-center">
-          <img
-            src={AuthStade}
-            alt="Illustration"
-            className="w-full h-auto rounded-l-lg"
+          <img src={AuthStade} alt="Illustration" className="w-full h-auto rounded-l-lg"
           />
         </div>
 
@@ -118,26 +110,16 @@ export default function Auth() {
               <label htmlFor="username" className="block text-sm font-medium">
                 Nom d'utilisateur
               </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
+              <input type="text" id="username" name="username" value={formData.username} onChange={handleChange}
                 className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-                required
-              />
+                required/>
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium">
                 Mot de passe
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
+              <input type="password" id="password" name="password" value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
                 required
@@ -147,8 +129,7 @@ export default function Auth() {
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
               {isLoading
                 ? "Chargement..."
                 : isLogin
@@ -161,20 +142,14 @@ export default function Auth() {
             {isLogin ? (
               <>
                 Pas encore de compte ?{" "}
-                <button
-                  onClick={() => setIsLogin(false)}
-                  className="text-blue-400 hover:underline"
-                >
+                <button onClick={() => setIsLogin(false)} className="text-blue-400 hover:underline">
                   Inscrivez-vous
                 </button>
               </>
             ) : (
               <>
                 Vous avez déjà un compte ?{" "}
-                <button
-                  onClick={() => setIsLogin(true)}
-                  className="text-blue-400 hover:underline"
-                >
+                <button onClick={() => setIsLogin(true)} className="text-blue-400 hover:underline">
                   Connectez-vous
                 </button>
               </>
