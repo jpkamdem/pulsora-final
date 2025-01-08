@@ -1,16 +1,17 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import animatedPulsora from "../assets/logopulsora-v2.mp4";
 
-export default function VideoWithButton() {
+export default function VideoWithAutoEnter() {
   const navigate = useNavigate();
 
-  const handleEnter = () => {
-    setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       navigate("/home");
-    }, 0);
-  };
+    }, 5500);
 
-  
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center min-h-screen bg-white">
@@ -23,13 +24,6 @@ export default function VideoWithButton() {
         <source src={animatedPulsora} type="video/mp4" />
         Votre navigateur ne supporte pas la lecture vidéo.
       </video>
-
-      <button
-        onClick={handleEnter}
-        className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:bg-blue-800 transition"
-      >
-        Entrez
-      </button>
     </div>
   );
 }
