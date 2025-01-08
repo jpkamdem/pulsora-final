@@ -44,7 +44,7 @@ export default function Header() {
 
       <header className="hidden lg:flex bg-white shadow-md border-b border-gray-200">
         <div className="container mx-auto">
-          <ul className="flex items-center justify-between">
+          <ul className="flex items-center justify-between ">
             <li>
               <img src={pulsoraOne} alt="Logo Pulsora" className="w-10 h-11" />
             </li>
