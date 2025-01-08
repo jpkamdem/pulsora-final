@@ -47,8 +47,8 @@ export default function Nutrition() {
           </section>
         </div>
         <div className="bg-blue-100 font-sans flex items-center p-6 gap-6">
-            <div className="w-1/3">
-            <img src="../assets/boisson.png" alt="Boisson Energisante" className="w-full h-auto rounded-lg"/>
+            <div className="w-1/3 flex justify-center">
+            <img src={boisson} alt="Boisson" className="w-40 h-40 rounded-lg" />
             </div>
             <div className="w-2/3 pl-6">
             <p className="text-left text-lg text-blue-500 font-medium">
@@ -65,7 +65,63 @@ export default function Nutrition() {
             </div>
         </div>
         </div>
-            
+        <div className="bg-blue-100 font-sans flex items-center p-6 gap-6">
+            <div className="w-1/3 flex justify-center">
+            <img src={cereales} alt="Barre Protéinée" className="w-40 h-40 rounded-lg" />
+            </div>
+            <div className="w-2/3 pl-6">
+            <p className="text-left text-lg text-blue-500 font-medium">
+                BARRE PROTORA
+            </p>
+            <p className="text-left text-lg text-gray-700 font-medium">
+            La barre protéinée qui nourrit tes muscles et ton ambition ! Avec 20 g de protéines de haute qualité, des fibres pour la satiété et des saveurs gourmandes, Barre Protora est idéale pour te soutenir après l’entraînement ou comme collation saine.
+            </p>
+            <div className="flex justify-between items-center mt-4">
+            <span className="text-xl font-bold text-blue-500">19,99€</span>
+            <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
+                Acheter
+            </button>
+            </div>
+        </div>
+        </div>
+        <div className="bg-blue-100 font-sans flex items-center p-6 gap-6">
+            <div className="w-1/3 flex justify-center">
+            <img src={chocolat} alt="Tablette de Chocolat" className="w-40 h-40 rounded-lg" />
+            </div>
+            <div className="w-2/3 pl-6">
+            <p className="text-left text-lg text-blue-500 font-medium">
+                CHOCORA
+            </p>
+            <p className="text-left text-lg text-gray-700 font-medium">
+            La tablette de chocolat qui allie plaisir et énergie ! Enrichie en cacao pur et superaliments, Chocora te procure une dose naturelle d’antioxydants et un plaisir intense. Idéale pour une pause gourmande ou une recharge énergétique avant ou après l’effort.
+            </p>
+            <div className="flex justify-between items-center mt-4">
+            <span className="text-xl font-bold text-blue-500">4,50€</span>
+            <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
+                Acheter
+            </button>
+            </div>
+        </div>
+        </div>
+        <div className="bg-blue-100 font-sans flex items-center p-6 gap-6">
+            <div className="w-1/3 flex justify-center">
+            <img src={vitamines} alt="Vitamines" className="w-40 h-40 rounded-lg" />
+            </div>
+            <div className="w-2/3 pl-6">
+            <p className="text-left text-lg text-blue-500 font-medium">
+                PULVITA
+            </p>
+            <p className="text-left text-lg text-gray-700 font-medium">
+            Les vitamines pensées pour les sportifs exigeants ! Formulées pour soutenir l’énergie, la récupération et l’immunité, Pulvita combine vitamines essentielles, minéraux et antioxydants. Elles t’aident à rester performant et en pleine forme, que ce soit sur le terrain ou au quotidien.
+            </p>
+            <div className="flex justify-between items-center mt-4">
+            <span className="text-xl font-bold text-blue-500">29,99€</span>
+            <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
+                Acheter
+            </button>
+            </div>
+        </div>
+        </div>    
       </>
     );
   }
