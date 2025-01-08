@@ -50,53 +50,47 @@ export default function Equipe() {
   return (
     <>
       {teamsData && teamsData.length > 0 ? (
-        teamsData.map((team: TeamInterface) => (
+        teamsData.map((team) => (
           <>
-            <>
-              <div className="mt-8">
-                <div className="">
-                  <div className="flex justify-center ">
-                    <div className=" text-center relative  bg-white border-2 border-gray-100 rounded-t-xl  w-3/6 py-3  ">
-                      <div className="absolute  left-10 bg-green-400 px-2  py-0.5  rounded-md">
-                        • {team.name}
-                      </div>
-                      <div className="text-gray-400 font-medium ">
-                        Victoires : {team.wins} - Défaites : {team.loses}
+            <div className="mt-8 flex justify-center ">
+              <div className=" text-center relative bg-white border-2 border-gray-100 rounded-t-xl w-3/6 py-3">
+                <div className="absolute  left-10 bg-green-400 px-2  py-0.5  rounded-md">
+                  • {team.name}
+                </div>
+                <div className="text-gray-400 font-medium ">
+                  Victoires : {team.wins} - Défaites : {team.loses}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-evenly">
+              <div className="flex flex-col items-center w-3/6 border-gray-100 border-l-2 border-r-2 border-b-2 rounded-b-xl drop-shadow-sm ">
+                <div className="w-1/3  p-6">
+                  <div className="flex items-center justify-center ">
+                    <div className="w-28 h-28 bg-gray-300 rounded-full flex items-center justify-center  border-2 border-gray-300">
+                      <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center drop-shadow-lg">
+                        <div className="w-14 h-14 bg-black rounded-full"></div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-evenly">
-                    <div className="flex w-3/6 border-gray-100 border-l-2 border-r-2 border-b-2 rounded-b-xl drop-shadow-sm ">
-                      <div className="w-1/3  p-6">
-                        <div className="flex items-center justify-center ">
-                          <div className="w-28 h-28 bg-gray-300 rounded-full flex items-center justify-center  border-2 border-gray-300">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center  drop-shadow-lg">
-                              <div className="w-14 h-14 bg-black rounded-full"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <ul className="text-xl font-bold mb-2 mt-2">
-                            Liste des joueurs
-                          </ul>
-                          {team.players.map((player: PlayerInterface) => (
-                            <>
-                              <li key={player.id} className="list-none">
-                                <p>
-                                  {player.number} - {player.firstname}{" "}
-                                  {player.lastname} - {player.position}
-                                </p>
-                                <p></p>
-                              </li>
-                            </>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                  <div className="text-center">
+                    <ul className="text-xl font-bold mb-2 mt-2">
+                      Liste des joueurs
+                    </ul>
+                    {team.players.map((player: PlayerInterface) => (
+                      <>
+                        <li key={player.id} className="list-none">
+                          <p>
+                            {player.number} - {player.firstname}{" "}
+                            {player.lastname} - {player.position}
+                          </p>
+                          <p></p>
+                        </li>
+                      </>
+                    ))}
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           </>
         ))
       ) : (

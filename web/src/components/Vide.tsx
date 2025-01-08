@@ -34,7 +34,7 @@ export default function Vide({ title }: Props) {
           </>
         ) : (
           <>
-            {/* <div className="bg-slate-800 p-6 text-white mt-6"></div> */}
+            <div className="bg-slate-800 p-6 text-white mt-6"></div>
             <VideoLoading />
           </>
         )}

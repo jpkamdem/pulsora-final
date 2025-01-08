@@ -1,16 +1,14 @@
-import facebookIcon from "../assets/social/facebook.png";
-import instagramIcon from "../assets/social/instagram.png";
-import linkedinIcon from "../assets/social/linkedin.png";
-import snapchatIcon from "../assets/social/snapchat.png";
-import twitterIcon from "../assets/social/twitter.png";
-import emailIcon from "../assets/social/email.png";
+// import facebookIcon from "../assets/social/facebook.png";
+// import instagramIcon from "../assets/social/instagram.png";
+// import linkedinIcon from "../assets/social/linkedin.png";
+// import snapchatIcon from "../assets/social/snapchat.png";
+// import twitterIcon from "../assets/social/twitter.png";
+// import emailIcon from "../assets/social/email.png";
 import teamImage from "../assets/social/equipebmf.jpg";
 
 export default function Contact() {
   return (
     <>
-      <Header title="CONTACT" />
-
       <div className="bg-gray-100 font-sans">
         <section className="text-center py-12 bg-white">
           <h1 className="text-4xl font-bold text-blue-600">CONTACT</h1>
@@ -42,7 +40,7 @@ export default function Contact() {
           </div>
         </section>
 
-        <section className="bg-gray-100 font-sans">
+        {/* <section className="bg-gray-100 font-sans">
           <div className="max-w-4xl mx-auto text-center">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
               <a href="www.facebook.com" className="flex flex-col items-center">
@@ -94,16 +92,8 @@ export default function Contact() {
               </a>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
-    </>
-  );
-}
-
-function Header({ title }: { title: string }) {
-  return (
-    <>
-      <nav>{title}</nav>
     </>
   );
 }
