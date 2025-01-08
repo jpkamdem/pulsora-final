@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import animatedPulsora from "../assets/logopulsora.mp4";
+import animatedPulsora from "../assets/logopulsora-v2.mp4";
 
 export default function VideoWithButton() {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function VideoWithButton() {
         onClick={handleEnter}
         className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:bg-blue-800 transition"
       >
-        Entrer
+        Entrez
       </button>
     </div>
   );

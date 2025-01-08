@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Role = "USER" | "ADMIN";
 
@@ -70,4 +71,19 @@ export default function Articles() {
         ))}
     </>
   );
+  const navigate = useNavigate();
+
+  const handleEnter = () => {
+    setTimeout(() => {
+      navigate("/nutrition");
+    }, 0);
+  };
+  return(
+    <button
+        onClick={handleEnter}
+        className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:bg-blue-800 transition"
+      >
+        NUTRITION
+      </button>
+  )
 }

@@ -21,6 +21,7 @@ import EditerArticle from "./pages/EditerArticle";
 import EditerJoueur from "./pages/EditerJoueur";
 import EditerEquipe from "./pages/EditerEquipe";
 import Loading from "./pages/Loading";
+import Nutrition from "./pages/Nutrition";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "articles",
         element: <Articles />,
+      },
+      {
+        path: "nutrition",
+        element: <Nutrition />,
       },
       {
         path: "saison",
