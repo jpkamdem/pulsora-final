@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Vide from "../components/Vide";
 
 type Role = "USER" | "ADMIN";
 
@@ -42,7 +43,8 @@ export default function Articles() {
   }, []);
   return (
     <>
-      {usersDatas &&
+      {usersDatas && usersDatas.length > 0 ? (
+        usersDatas &&
         usersDatas.map((user) => (
           <>
             {user.articles.map((article) => (
@@ -68,7 +70,10 @@ export default function Articles() {
               </>
             ))}
           </>
-        ))}
+        ))
+      ) : (
+        <Vide title="articles" />
+      )}
     </>
   );
   const navigate = useNavigate();
@@ -78,12 +83,12 @@ export default function Articles() {
       navigate("/nutrition");
     }, 0);
   };
-  return(
+  return (
     <button
-        onClick={handleEnter}
-        className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:bg-blue-800 transition"
-      >
-        NUTRITION
-      </button>
-  )
+      onClick={handleEnter}
+      className="mt-8 px-6 py-3 text-white bg-blue-900 rounded-lg shadow hover:bg-blue-800 transition"
+    >
+      NUTRITION
+    </button>
+  );
 }
