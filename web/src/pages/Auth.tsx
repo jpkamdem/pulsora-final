@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthStade from "../assets/authstade.webp";
-import VideoLoading from "../components/VideoLoading";
 
 export type TokenType = {
   id: number;
@@ -152,7 +151,7 @@ export default function Auth() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <VideoLoading />
+                <p>Chargement...</p>
               ) : isLogin ? (
                 "Se connecter"
               ) : (
