@@ -38,10 +38,10 @@ export default function GenerateGame() {
 
     const teamsIdx = teamsData.map((team) => team.id);
 
-    let homeTeamId = teamsIdx[Math.random() * teamsIdx.length];
+    let homeTeamId = teamsIdx[Math.floor(Math.random() * teamsIdx.length)];
     let awayTeamId: number;
     do {
-      awayTeamId = teamsIdx[Math.random() * teamsIdx.length];
+      awayTeamId = teamsIdx[Math.floor(Math.random() * teamsIdx.length)];
     } while (homeTeamId === awayTeamId);
 
     try {

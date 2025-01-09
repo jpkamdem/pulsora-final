@@ -26,7 +26,7 @@ export default function Vide({ title }: Props) {
         <p className="text-2xl">{sentenceEnd(title)}</p>
         {title === "matchs" ? (
           <>
-            <Link to="/generer-">
+            <Link to="/generer-match">
               <button className="bg-slate-800 p-6 text-white mt-12 hover:bg-white hover:text-slate-800">
                 Générer un match
               </button>
