@@ -13,3 +13,5 @@ export function extractErrorMessage(error: unknown): string {
 
   return message;
 }
+
+export const emailRegex = /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/;
