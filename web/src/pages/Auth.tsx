@@ -9,6 +9,21 @@ export type TokenType = {
   exp: number;
 };
 
+type Token = {
+  email: string;
+  username: string;
+  role: string;
+  token: string;
+};
+
+function parseCookie(): Record<string, string> {
+  return document.cookie.split("; ").reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    acc[key] = decodeURIComponent(value);
+    return acc;
+  }, {} as Record<string, string>);
+}
+
 export default function Auth() {
   const [registerMessage, setRegisterMEssage] = useState({
     error: "",
@@ -45,6 +60,7 @@ export default function Auth() {
     try {
       const response = await fetch("http://localhost:3333/api/auth/register", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -75,6 +91,7 @@ export default function Auth() {
     try {
       const response = await fetch("http://localhost:3333/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -92,8 +109,11 @@ export default function Auth() {
       const data = (await response.json()) as ApiResponse;
       setLoginMessage((prev) => ({ ...prev, message: data.message }));
       setLoginForm({ email: "", password: "" });
-      const test = document.cookie;
-      console.log(test);
+      const cookie = parseCookie() as Token;
+      localStorage.setItem("token", cookie.token);
+      localStorage.setItem("username", cookie.username);
+      localStorage.setItem("email", cookie.email);
+      localStorage.setItem("role", cookie.role);
     } catch (error: unknown) {
       setLoginMessage((prev) => ({
         ...prev,
