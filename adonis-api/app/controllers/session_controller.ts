@@ -11,8 +11,19 @@ export default class SessionController {
       const user = await User.verifyCredentials(email, password)
       const token = await User.accessTokens.create(user)
       return response
-        .cookie('token', token, { maxAge: '15m', secure: true, sameSite: 'lax' })
-        .cookie('user', user)
+        .clearCookie('token')
+        .clearCookie('user')
+        .clearCookie('email')
+        .clearCookie('role')
+        .plainCookie('token', token, {
+          maxAge: '15m',
+          secure: false,
+          sameSite: 'lax',
+          httpOnly: false,
+        })
+        .plainCookie('username', user.username)
+        .plainCookie('email', user.email)
+        .plainCookie('role', user.role)
         .status(201)
         .json({ message: 'Connecté' })
     } catch (error: unknown) {
