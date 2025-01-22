@@ -1,24 +1,12 @@
 import React from "react";
 import Vide from "../components/Vide";
-import { Position, useGetPlayers, useGetTeams } from "../utils/hooks";
+import { useGetPlayers, useGetTeams } from "../utils/hooks";
+import { pos } from "../utils/types";
 
 export default function Equipe() {
   const { teams, loading: teamLoading } = useGetTeams();
   const { players, loading: playerLoading } = useGetPlayers();
-  function pos(pos: Position) {
-    if (pos === "gk") {
-      return "Gardien";
-    }
-    if (pos === "def") {
-      return "Défenseur";
-    }
 
-    if (pos === "mf") {
-      return "Milieu";
-    }
-
-    return "Attaquant";
-  }
   return (
     <>
       {teamLoading ? (

@@ -1,66 +1,27 @@
-import { useEffect, useState } from "react";
-import { TeamInterface } from "./Equipe";
+import { useState } from "react";
 import { extractErrorMessage } from "../utils/security";
-
-export interface GameGeneratorInterface {
-  homeTeamId: number;
-  awayTeamId: number;
-}
+import { ApiError, ApiResponse } from "../utils/types";
 
 export default function GenerateGame() {
-  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    fetch("http://localhost:3000/teams", {
-      signal: controller.signal,
-      method: "GET",
-      credentials: "same-origin",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((datas) => setTeamsData(datas.data))
-      .then(() => setMessage("Equipe créée"))
-      .catch((error) => setMessage(extractErrorMessage(error)));
-  }, []);
-
-  const generateGame = async () => {
-    if (teamsData.length <= 1) {
-      setMessage("Il n'y a pas assez d'équipes pour simuler une rencontre");
-      return;
-    }
-
-    const teamsIdx = teamsData.map((team) => team.id);
-
-    let homeTeamId = teamsIdx[Math.floor(Math.random() * teamsIdx.length)];
-    let awayTeamId: number;
-    do {
-      awayTeamId = teamsIdx[Math.floor(Math.random() * teamsIdx.length)];
-    } while (homeTeamId === awayTeamId);
-
+  async function generateGame() {
     try {
-      fetch("http://localhost:3000/games", {
+      const response = await fetch("http://localhost:3333/api/games", {
         method: "POST",
-        credentials: "same-origin",
-        mode: "cors",
-        body: JSON.stringify({ homeTeamId, awayTeamId }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then(() => setMessage("Match généré !"))
-        .catch((error) => setMessage(extractErrorMessage(error)));
-    } catch (e) {
-      setMessage("Erreur lors de la générationdu match");
+      });
+      if (!response.ok) {
+        const errorData = (await response.json()) as ApiError;
+        setMessage(errorData.message || "Erreur interne");
+        return;
+      }
+
+      const data = (await response.json()) as ApiResponse;
+      setMessage(data.message);
+    } catch (error: unknown) {
+      setMessage(extractErrorMessage(error));
     }
-  };
+  }
 
   return (
     <>
