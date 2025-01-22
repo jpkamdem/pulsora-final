@@ -1,7 +1,6 @@
-import axios from "axios";
-import { useState, FormEvent, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthStade from "../assets/authstade.webp";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { extractErrorMessage } from "../utils/security";
+import { ApiError, ApiResponse } from "../utils/types";
 
 export type TokenType = {
   id: number;
@@ -11,185 +10,159 @@ export type TokenType = {
 };
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(false);
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
+  const [registerMessage, setRegisterMEssage] = useState({
+    error: "",
+    message: "",
+  });
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+  const [loginMessage, setLoginMessage] = useState({ error: "", message: "" });
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
 
-  const navigate = useNavigate();
+  const registerEmpty =
+    registerForm.email === "" ||
+    registerForm.username === "" ||
+    registerForm.password === "";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const loginEmpty = loginForm.email === "" || loginForm.password === "";
 
-  const handleSubmit = async (e: FormEvent) => {
+  function handleRegisterChange(e: ChangeEvent<HTMLInputElement>) {
+    setRegisterForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  function handleLoginChange(e: ChangeEvent<HTMLInputElement>) {
+    setLoginForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleRegister(e: FormEvent) {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage("");
-
-    if (!isLogin && formData.username === formData.password) {
-      setMessage(
-        "Le nom d'utilisateur et le mot de passe ne doivent pas être identiques."
-      );
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      if (isLogin) {
-        const res = await axios.post(
-          "http://localhost:3000/connection/login",
-          formData
-        );
-        localStorage.setItem("token", res.data.token);
-        setMessage("Connexion réussie !");
-        setShowPopup(true);
-
-        setTimeout(() => {
-          setShowPopup(false);
-          navigate("/");
-        }, 2000);
-      } else {
-        await axios.post("http://localhost:3000/connection/register", formData);
-        setMessage("Votre compte a été créé !");
-        setShowPopup(true);
-
-        setTimeout(() => {
-          setShowPopup(false);
-          setIsLogin(true);
-        }, 3000);
+      const response = await fetch("http://localhost:3333/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerForm),
+      });
+      if (!response.ok) {
+        const errorData = (await response.json()) as ApiError;
+        setRegisterMEssage((prev) => ({
+          ...prev,
+          error: errorData.message || "Erreur interne",
+        }));
+        return;
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Une erreur est survenue.");
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
+      const data = (await response.json()) as ApiResponse;
+      setRegisterMEssage((prev) => ({ ...prev, message: data.message }));
+      setRegisterForm({ email: "", password: "", username: "" });
+    } catch (error: unknown) {
+      setRegisterMEssage((prev) => ({
+        ...prev,
+        error: extractErrorMessage(error),
+      }));
     }
-  }, [navigate]);
+  }
+
+  async function handleLogin(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:3333/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginForm),
+      });
+      if (!response.ok) {
+        const errorData = (await response.json()) as ApiError;
+        setLoginMessage((prev) => ({
+          ...prev,
+          error: errorData.message || "Erreur interne",
+        }));
+        return;
+      }
+
+      const data = (await response.json()) as ApiResponse;
+      setLoginMessage((prev) => ({ ...prev, message: data.message }));
+      setLoginForm({ email: "", password: "" });
+      const test = document.cookie;
+      console.log(test);
+    } catch (error: unknown) {
+      setLoginMessage((prev) => ({
+        ...prev,
+        error: extractErrorMessage(error),
+      }));
+    }
+  }
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-blue-900">
-      <button
-        onClick={() => navigate("/")}
-        className="absolute top-4 left-4 flex items-center text-blue-600 hover:text-blue-800"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 mr-2"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
+    <>
+      <h1>Inscription</h1>
+      <form onSubmit={handleRegister}>
+        <label>Adresse mail</label>
+        <input
+          type="email"
+          name="email"
+          onChange={(e) => handleRegisterChange(e)}
+          value={registerForm.email}
+        />
+        <label>Nom d'utilisateur</label>
+        <input
+          type="text"
+          name="username"
+          onChange={(e) => handleRegisterChange(e)}
+          value={registerForm.username}
+        />
+        <label>Mot de passe</label>
+        <input
+          type="password"
+          name="password"
+          onChange={(e) => handleRegisterChange(e)}
+          value={registerForm.password}
+        />
+        <button
+          type="submit"
+          disabled={registerEmpty}
+          className={registerEmpty ? `bg-red-500` : ""}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-        Retour à l'accueil
-      </button>
-      <div className="flex w-full max-w-4xl shadow-lg rounded-lg overflow-hidden bg-white">
-        <div className="w-1/2 flex flex-col items-center justify-center">
-          <img
-            src={AuthStade}
-            alt="Illustration"
-            className="w-full h-auto rounded-l-lg"
-          />
-        </div>
-
-        <div className="w-1/2 p-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            {isLogin ? "Connexion" : "Créer un compte"}
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium">
-                Nom d'utilisateur
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium">
-                Mot de passe
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-2 mt-2 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <p>Chargement...</p>
-              ) : isLogin ? (
-                "Se connecter"
-              ) : (
-                "Créer un compte"
-              )}
-            </button>
-          </form>
-
-          <p className="text-center mt-4">
-            {isLogin ? (
-              <>
-                Pas encore de compte ?{" "}
-                <button
-                  onClick={() => setIsLogin(false)}
-                  className="text-blue-400 hover:underline"
-                >
-                  Inscrivez-vous
-                </button>
-              </>
-            ) : (
-              <>
-                Vous avez déjà un compte ?{" "}
-                <button
-                  onClick={() => setIsLogin(true)}
-                  className="text-blue-400 hover:underline"
-                >
-                  Connectez-vous
-                </button>
-              </>
-            )}
-          </p>
-        </div>
-      </div>
-      {showPopup && (
-        <div className="absolute bg-blue-600 text-white px-6 py-4 rounded-lg shadow-md text-center animate-fade">
-          {message}
-        </div>
-      )}
-    </div>
+          S'inscrire
+        </button>
+      </form>
+      {registerMessage.message && <p>{registerMessage.message}</p>}
+      {registerMessage.error && <p>{registerMessage.error}</p>}
+      <h1>Connexion</h1>
+      <form onSubmit={handleLogin}>
+        <label>Adresse mail</label>
+        <input
+          type="email"
+          name="email"
+          onChange={(e) => handleLoginChange(e)}
+          value={loginForm.email}
+        />
+        <label>Mot de passe</label>
+        <input
+          type="password"
+          name="password"
+          onChange={(e) => handleLoginChange(e)}
+          value={loginForm.password}
+        />
+        <button
+          type="submit"
+          disabled={loginEmpty}
+          className={loginEmpty ? `bg-red-500` : ""}
+        >
+          Se connecter
+        </button>
+        {loginMessage.message && <p>{loginMessage.message}</p>}
+        {loginMessage.error && <p>{loginMessage.error}</p>}
+      </form>
+    </>
   );
 }

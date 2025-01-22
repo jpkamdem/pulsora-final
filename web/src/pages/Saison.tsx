@@ -86,8 +86,11 @@ export default function Saison() {
             </>
           ) : (
             <>
-              <div>
-                <Link to="/generer-match">Gérérer un match</Link>
+              <div className="flex h-36 flex-col justify-center items-center">
+                <p className="my-4">Aucun match n'a été simulé</p>
+                <button className="bg-slate-800 text-2xl text-white p-8 hover:text-slate-800 hover:bg-white">
+                  <Link to="/generer-match">Gérérer un match</Link>
+                </button>
               </div>
             </>
           )}
