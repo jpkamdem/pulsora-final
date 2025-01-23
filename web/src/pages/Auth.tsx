@@ -110,10 +110,20 @@ export default function Auth() {
       setLoginMessage((prev) => ({ ...prev, message: data.message }));
       setLoginForm({ email: "", password: "" });
       const cookie = parseCookie() as Token;
-      localStorage.setItem("token", cookie.token);
-      localStorage.setItem("username", cookie.username);
-      localStorage.setItem("email", cookie.email);
-      localStorage.setItem("role", cookie.role);
+      const email = JSON.parse(atob(cookie.email));
+      const username = JSON.parse(atob(cookie.username));
+      const token = JSON.parse(atob(cookie.token));
+      const role = JSON.parse(atob(cookie.role));
+      const valueArr = [email, username, token, role];
+      const nameArr = ["email", "username", "token", "role"];
+
+      valueArr.forEach((item, index) => {
+        if (item && typeof item === "object" && "message" in item) {
+          if (typeof item.message === "string") {
+            localStorage.setItem(nameArr[index], item.message);
+          }
+        }
+      });
     } catch (error: unknown) {
       setLoginMessage((prev) => ({
         ...prev,

@@ -567,6 +567,9 @@ export function useGetGames() {
           }
           setGames(data);
         })
+        .catch((error) => {
+          return { message: extractErrorMessage(error) };
+        })
         .finally(() => setLoading(false));
     }
 
