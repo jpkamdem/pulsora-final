@@ -2,18 +2,18 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { extractErrorMessage } from "../utils/security";
 import { ApiError, ApiResponse } from "../utils/types";
 
-export type TokenType = {
-  id: number;
-  username: string;
-  iat: number;
-  exp: number;
-};
-
 type Token = {
   email: string;
   username: string;
   role: string;
   token: string;
+};
+
+export type Tokenn = {
+  token: string;
+  expiresAt: string;
+  type: string;
+  abilities: [];
 };
 
 function parseCookie(): Record<string, string> {
@@ -110,12 +110,35 @@ export default function Auth() {
       setLoginMessage((prev) => ({ ...prev, message: data.message }));
       setLoginForm({ email: "", password: "" });
       const cookie = parseCookie() as Token;
-      const email = JSON.parse(atob(cookie.email));
-      const username = JSON.parse(atob(cookie.username));
-      const token = JSON.parse(atob(cookie.token));
-      const role = JSON.parse(atob(cookie.role));
-      const valueArr = [email, username, token, role];
-      const nameArr = ["email", "username", "token", "role"];
+      const email = await JSON.parse(atob(cookie.email));
+      const username = await JSON.parse(atob(cookie.username));
+      const tempToken = await JSON.parse(atob(cookie.token));
+      let token;
+      if (
+        tempToken &&
+        typeof tempToken === "object" &&
+        "message" in tempToken
+      ) {
+        if (typeof tempToken.message === "object") {
+          token = tempToken.message as Tokenn | null;
+          if (token && typeof token === "object") {
+            if ("token" in token && typeof token.token === "string") {
+              localStorage.setItem("token", token.token);
+            }
+            if ("expiresAt" in token && typeof token.expiresAt === "string") {
+              const current = new Date(token.expiresAt);
+              const timestamp = current.getTime();
+              localStorage.setItem("expiresAt", timestamp.toString());
+            }
+            if ("type" in token && typeof token.type === "string") {
+              localStorage.setItem("type", token.type);
+            }
+          }
+        }
+      }
+      const role = await JSON.parse(atob(cookie.role));
+      const valueArr = [email, username, role];
+      const nameArr = ["email", "username", "role"];
 
       valueArr.forEach((item, index) => {
         if (item && typeof item === "object" && "message" in item) {

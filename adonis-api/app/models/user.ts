@@ -47,6 +47,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   // }
 
   static accessTokens = DbAccessTokensProvider.forModel(User, {
-    expiresIn: '15m',
+    expiresIn: '1m',
   })
 }
