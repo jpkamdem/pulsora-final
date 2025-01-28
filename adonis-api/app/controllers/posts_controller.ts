@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Post from '#models/post'
 import { extractErrorMessage } from '../utils.js'
-import { createPostValidator } from '#validators/post'
+import { createPostValidator, updatePostValidator } from '#validators/post'
 
 export default class PostsController {
   async getAllPosts({ response }: HttpContext) {
@@ -68,7 +68,7 @@ export default class PostsController {
         return response.abort({ message: 'Post introuvable' })
       }
 
-      const { title, content } = await request.validateUsing(createPostValidator)
+      const { title, content } = await request.validateUsing(updatePostValidator)
 
       if (title) {
         post.title = title

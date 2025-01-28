@@ -1,16 +1,17 @@
-import { FormEvent, useState } from "react";
-import { TokenType } from "./Auth";
-import { jwtDecode } from "jwt-decode";
+import { ChangeEvent, FormEvent, useState } from "react";
 import VideoLoading from "../components/VideoLoading";
 
 export default function CreerArticle() {
   const [message, setMessage] = useState("");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [post, setPost] = useState({ title: "", content: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const isEmpty = title.trim() === "" || body.trim() === "";
+  const isEmpty = post.title.trim() === "" || post.content.trim() === "";
 
-  const handleForm = async (e: FormEvent) => {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setPost((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleForm(e: FormEvent) {
     e.preventDefault();
 
     const storedToken = localStorage.getItem("token");
@@ -20,27 +21,29 @@ export default function CreerArticle() {
       return;
     }
 
-    const decodedToken: TokenType = jwtDecode(storedToken);
+    const userId = localStorage.getItem("id");
+    if (!userId) {
+      console.log("Erreur interne");
+      return;
+    }
 
     setIsLoading(true);
-    fetch("http://localhost:3000/articles", {
+    fetch(`http://localhost:3333/api/posts/${userId}`, {
       method: "POST",
       credentials: "same-origin",
       mode: "cors",
       body: JSON.stringify({
-        title: title,
-        body: body,
-        authorId: decodedToken.id,
+        title: post.title,
+        content: post.content,
       }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then(() => setMessage("Article créé avec succès !"))
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
-  };
+  }
 
   return (
     <>
@@ -54,15 +57,19 @@ export default function CreerArticle() {
 
         <ul className="w-full space-y-6">
           <li>
-            <label htmlFor="title" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="title"
+              className="block text-gray-700 font-semibold"
+            >
               Titre de l'article
             </label>
             <input
               id="title"
               className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
+              onChange={(e) => handleChange(e)}
+              value={post.title}
+              name="title"
               autoComplete="off"
               placeholder="Entrez le titre de l'article"
             />
@@ -75,8 +82,11 @@ export default function CreerArticle() {
             <textarea
               id="body"
               className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              onChange={(e) => setBody(e.target.value)}
-              value={body}
+              onChange={(e) =>
+                setPost((prev) => ({ ...prev, content: e.target.value }))
+              }
+              value={post.content}
+              name="post"
               placeholder="Écrivez le contenu de votre article"
               rows={4}
             ></textarea>
@@ -96,7 +106,11 @@ export default function CreerArticle() {
         </button>
       </form>
 
-      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
+      {isLoading ? (
+        <VideoLoading />
+      ) : (
+        message && <p className="text-center mt-4 text-green-500">{message}</p>
+      )}
     </>
   );
 }

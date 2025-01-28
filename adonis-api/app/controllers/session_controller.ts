@@ -24,6 +24,7 @@ export default class SessionController {
         .plainCookie('username', user.username, { httpOnly: false, secure: false, sameSite: 'lax' })
         .plainCookie('email', user.email, { httpOnly: false, secure: false, sameSite: 'lax' })
         .plainCookie('role', user.role, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .plainCookie('id', user.id, { httpOnly: false, secure: false, sameSite: 'lax' })
         .status(201)
         .json({ message: 'Connecté' })
     } catch (error: unknown) {

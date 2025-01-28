@@ -27,6 +27,7 @@ export default function Profil() {
       "token",
       "type",
       "username",
+      "id",
     ];
     const storedToken = localStorage.getItem("token");
 
@@ -96,6 +97,7 @@ export default function Profil() {
       "token",
       "type",
       "username",
+      "id",
     ];
 
     lsValues.forEach((_, index) => localStorage.removeItem(lsValues[index]));

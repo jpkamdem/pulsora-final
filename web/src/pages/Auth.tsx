@@ -7,6 +7,7 @@ type Token = {
   username: string;
   role: string;
   token: string;
+  id: string;
 };
 
 export type Tokenn = {
@@ -112,6 +113,7 @@ export default function Auth() {
       const cookie = parseCookie() as Token;
       const email = await JSON.parse(atob(cookie.email));
       const username = await JSON.parse(atob(cookie.username));
+      const id = await JSON.parse(atob(cookie.id));
       const tempToken = await JSON.parse(atob(cookie.token));
       let token;
       if (
@@ -137,13 +139,16 @@ export default function Auth() {
         }
       }
       const role = await JSON.parse(atob(cookie.role));
-      const valueArr = [email, username, role];
-      const nameArr = ["email", "username", "role"];
+      const valueArr = [email, username, role, id];
+      const nameArr = ["email", "username", "role", "id"];
 
       valueArr.forEach((item, index) => {
         if (item && typeof item === "object" && "message" in item) {
           if (typeof item.message === "string") {
             localStorage.setItem(nameArr[index], item.message);
+          }
+          if (typeof item.message === "number") {
+            localStorage.setItem(nameArr[index], String(item.message));
           }
         }
       });

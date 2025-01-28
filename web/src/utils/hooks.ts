@@ -112,37 +112,39 @@ export function useGetUserWithPosts(id: number) {
   );
   const [loading, setLoading] = useState(false);
 
+  async function fetchData(signal?: AbortSignal) {
+    try {
+      const res = await fetch(`http://localhost:3333/api/users/posts/${id}`, {
+        signal,
+      });
+      if (!res.ok) {
+        throw new Error(`Erreur : ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (!userWithPostsChecking(data)) {
+        throw new Error("Format de donnée invalide");
+      }
+
+      setUsersWithPosts(data);
+    } catch (error: unknown) {
+      return { message: extractErrorMessage(error) };
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     const controller = new AbortController();
+    fetchData(controller.signal);
 
-    async function fetchData() {
-      setLoading(true);
-      fetch(`http://localhost:3333/api/users/posts/${id}`, {
-        signal: controller.signal,
-      })
-        .then((res) => {
-          if (!res.ok) {
-            return { message: `Erreur : ${res.status}` };
-          }
-          return res.json();
-        })
-        .then((data) => {
-          if (!userWithPostsChecking(data)) {
-            return { message: "Format de donnée invalide" };
-          }
-          setUsersWithPosts(data);
-        })
-        .catch((error) => {
-          return { message: extractErrorMessage(error) };
-        })
-        .finally(() => setLoading(false));
-    }
-
-    fetchData();
     return () => controller.abort();
-  }, [id]);
+  });
 
-  return { userWithPosts, loading };
+  return {
+    userWithPosts,
+    loading,
+  };
 }
 
 export function useAllUsersWithPosts() {
