@@ -1,35 +1,14 @@
-import { FormEvent, useEffect, useState } from "react";
-import { TeamInterface } from "./Equipe";
+import { FormEvent, useState } from "react";
+import { useGetTeams } from "../utils/hooks";
 import { extractErrorMessage } from "../utils/security";
 import VideoLoading from "../components/VideoLoading";
 
 export default function CreerEquipe() {
-  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
+  const { teams, loading: teamLoading } = useGetTeams();
   const [teamName, setTeamName] = useState("");
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const isEmpty = teamName.trim() === "";
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    fetch("http://localhost:3000/teams", {
-      signal: controller.signal,
-      method: "GET",
-      credentials: "same-origin",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((datas) => setTeamsData(datas.data))
-      .catch((err) => extractErrorMessage(err));
-
-    return () => controller.abort();
-  }, [teamsData]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -39,7 +18,8 @@ export default function CreerEquipe() {
     }
 
     if (
-      teamsData.some(
+      teams &&
+      teams.some(
         (team) =>
           team.name.toLocaleLowerCase().trim() ===
           teamName.toLocaleLowerCase().trim()
@@ -49,9 +29,7 @@ export default function CreerEquipe() {
       return;
     }
 
-    setIsLoading(true);
-
-    fetch("http://localhost:3000/teams", {
+    fetch("http://localhost:3333/api/teams", {
       method: "POST",
       credentials: "same-origin",
       mode: "cors",
@@ -63,8 +41,7 @@ export default function CreerEquipe() {
     })
       .then(() => setMessage("Equipe créée"))
       .catch((error) => extractErrorMessage(error))
-      .catch(() => setMessage("Erreur lors de la création d'une équipe"))
-      .finally(() => setIsLoading(false));
+      .catch(() => setMessage("Erreur lors de la création d'une équipe"));
   }
 
   return (
@@ -79,7 +56,10 @@ export default function CreerEquipe() {
 
         <ul className="w-full space-y-6">
           <li>
-            <label htmlFor="teamName" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="teamName"
+              className="block text-gray-700 font-semibold"
+            >
               Nom de l'équipe
             </label>
             <input
@@ -103,11 +83,15 @@ export default function CreerEquipe() {
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          {isLoading ? "Création en cours..." : "Créer l'équipe"}
+          {teamLoading ? "Création en cours..." : "Créer l'équipe"}
         </button>
       </form>
 
-      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
+      {teamLoading ? (
+        <VideoLoading />
+      ) : (
+        message && <p className="text-center mt-4 text-green-500">{message}</p>
+      )}
     </>
   );
 }

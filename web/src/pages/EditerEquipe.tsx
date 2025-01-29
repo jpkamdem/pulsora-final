@@ -1,38 +1,15 @@
-import { useEffect, useState, FormEvent } from "react";
-import { TeamInterface } from "./Equipe"; 
+import { useState, FormEvent } from "react";
+import { Team, useGetTeams } from "../utils/hooks";
 import { extractErrorMessage } from "../utils/security";
 
 export default function EditerEquipe() {
-  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState<TeamInterface | null>(null); 
-  const [updatedTeam, setUpdatedTeam] = useState<TeamInterface | null>(null); 
-  
-  async function fetchTeams() {
-    try {
-      const response = await fetch("http://localhost:3000/teams", {
-        method: "GET",
-        credentials: "same-origin",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      const data = await response.json();
-      setTeamsData(data.data); 
-    } catch (error) {
-      console.log(extractErrorMessage(error));
-    }
-  }
- 
-  useEffect(() => {
-    fetchTeams();
-  }, []);
+  const { teams, loading: teamLoading } = useGetTeams();
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [updatedTeam, setUpdatedTeam] = useState<Team | null>(null);
 
   async function deleteTeam(id: number) {
     try {
-      const response = await fetch(`http://localhost:3000/teams/${id}`, {
+      const response = await fetch(`http://localhost:3333/api/teams/${id}`, {
         method: "DELETE",
         credentials: "same-origin",
         mode: "cors",
@@ -43,7 +20,6 @@ export default function EditerEquipe() {
       });
 
       if (response.ok) {
-        fetchTeams(); 
         console.log("Equipe supprimée");
       } else {
         throw new Error("Erreur lors de la suppression");
@@ -54,7 +30,7 @@ export default function EditerEquipe() {
   }
 
   async function editTeam(e: FormEvent, id: number) {
-    e.preventDefault(); 
+    e.preventDefault();
 
     if (!updatedTeam) {
       console.log("Pas de données à mettre à jour.");
@@ -62,8 +38,8 @@ export default function EditerEquipe() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/teams/${id}`, {
-        method: "PUT",
+      const response = await fetch(`http://localhost:3333/api/teams/${id}`, {
+        method: "PATCH",
         credentials: "same-origin",
         mode: "cors",
         body: JSON.stringify(updatedTeam),
@@ -74,9 +50,8 @@ export default function EditerEquipe() {
       });
 
       if (response.ok) {
-        fetchTeams(); 
-        setSelectedTeam(null); 
-        setUpdatedTeam(null); 
+        setSelectedTeam(null);
+        setUpdatedTeam(null);
         console.log("Equipe mise à jour");
       } else {
         throw new Error("Erreur lors de la mise à jour");
@@ -86,111 +61,98 @@ export default function EditerEquipe() {
     }
   }
 
-  const handleEdit = (team: TeamInterface) => {
+  const handleEdit = (team: Team) => {
     setSelectedTeam(team);
-    setUpdatedTeam({ ...team }); 
+    setUpdatedTeam({ ...team });
   };
 
   return (
     <>
-    <div className="flex justify-between p-8">
-
-    
-      <div className="flex flex-col">
-
-
-        <h2 className="font-bold text-lg text-center mt-10">Liste des équipes</h2>
-        <ul className="">
-          {teamsData.map((team) => (
-            <li key={team.id} className="bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm p-4 m-2">
-              <h3>
-                <span className="font-bold">Nom de l'équipe :</span> {team.name}
-              </h3>
-              <p>
-                <span className="font-bold">Victoires :</span> {team.wins}
-              </p>
-              <p>
-                <span className="font-bold">Défaites :</span> {team.loses}
-              </p>
-              <button
-                className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
-                onClick={() => deleteTeam(team.id)}
-              >
-                Supprimer
-              </button>
-              <button
-                className="p-3 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition duration-200 ml-4"
-                onClick={() => handleEdit(team)} 
-              >
-                Modifier
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-
-      {selectedTeam && (
-        <div className="flex justify-self-start  p-6 ">
-          <form
-            className="border-solid flex flex-col items-center m-auto border-2 p-4 bg-gray-100 border-2 border-gray-300 rounded-lg shadow-md"
-            onSubmit={(e) => editTeam(e, selectedTeam.id)}
-          >
-            <h3 className="text-xl font-bold text-gray-800  text-center">Modifier l'équipe</h3>
-            <ul>
-              <li>
-                <label className="block text-gray-700 font-semibold">Nom de l'équipe</label>
-                <input
-                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  name="name"
-                  value={updatedTeam?.name || ""}
-                  onChange={(e) =>
-                    setUpdatedTeam((prev) => ({
-                      ...prev!,
-                      name: e.target.value,
-                    }))
-                  }
-                  type="text"
-                />
-              </li>
-              <li>
-                <label className="block text-gray-700 font-semibold">Victoires</label>
-                <input
-                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  name="wins"
-                  value={updatedTeam?.wins || 0}
-                  onChange={(e) =>
-                    setUpdatedTeam((prev) => ({
-                      ...prev!,
-                      wins: parseInt(e.target.value) || 0,
-                    }))
-                  }
-                  type="number"
-                />
-              </li>
-              <li>
-                <label  className="block text-gray-700 font-semibold">Défaites</label>
-                <input
-                  className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-10"
-                  name="loses"
-                  value={updatedTeam?.loses || 0}
-                  onChange={(e) =>
-                    setUpdatedTeam((prev) => ({
-                      ...prev!,
-                      loses: parseInt(e.target.value) || 0,
-                    }))
-                  }
-                  type="number"
-                />
-              </li>
-            </ul>
-            <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-bold">
-              Modifier l'équipe
-            </button>
-          </form>
+      <div className="flex justify-between p-8">
+        <div className="flex flex-col">
+          <h2 className="font-bold text-lg text-center mt-10">
+            Liste des équipes
+          </h2>
+          <ul className="">
+            {teamLoading ? (
+              <p>Chargement...</p>
+            ) : (
+              teams &&
+              teams.map((team) => (
+                <li
+                  key={team.id}
+                  className="bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm p-4 m-2"
+                >
+                  <h3>
+                    <span className="font-bold">Nom de l'équipe :</span>{" "}
+                    {team.name}
+                  </h3>
+                  <p>
+                    <span className="font-bold">Victoires :</span> {team.wins}
+                  </p>
+                  <p>
+                    <span className="font-bold">Défaites :</span> {team.loses}
+                  </p>
+                  <p>
+                    <span className="font-bold capitalize">égalités :</span>{" "}
+                    {team.draws}
+                  </p>
+                  <button
+                    className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                    onClick={() => deleteTeam(team.id)}
+                  >
+                    Supprimer
+                  </button>
+                  <button
+                    className="p-3 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition duration-200 ml-4"
+                    onClick={() => handleEdit(team)}
+                  >
+                    Modifier
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
         </div>
-      )}
-    </div>
+
+        {selectedTeam && (
+          <div className="flex justify-self-start  p-6 ">
+            <form
+              className="border-solid flex flex-col items-center m-auto border-2 p-4 bg-gray-100 border-gray-300 rounded-lg shadow-md"
+              onSubmit={(e) => editTeam(e, selectedTeam.id)}
+            >
+              <h3 className="text-xl font-bold text-gray-800  text-center">
+                Modifier l'équipe
+              </h3>
+              <ul>
+                <li>
+                  <label className="block text-gray-700 font-semibold">
+                    Nom de l'équipe
+                  </label>
+                  <input
+                    className="w-full px-4 py-1 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    name="name"
+                    value={updatedTeam?.name || ""}
+                    onChange={(e) =>
+                      setUpdatedTeam((prev) => ({
+                        ...prev!,
+                        name: e.target.value,
+                      }))
+                    }
+                    type="text"
+                  />
+                </li>
+              </ul>
+              <button
+                type="submit"
+                className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-bold"
+              >
+                Modifier l'équipe
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
     </>
   );
 }

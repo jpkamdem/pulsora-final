@@ -218,36 +218,32 @@ export function useGetTeams() {
   const [teams, setTeams] = useState<Team[] | null>(null);
   const [loading, setLoading] = useState(false);
 
+  async function fetchData(signal?: AbortSignal) {
+    try {
+      const response = await fetch("http://localhost:3333/api/teams", {
+        signal,
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur : ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!teamsChecking(data)) {
+        return { message: "Format de donnée invalide" };
+      }
+
+      setTeams(data);
+    } catch (error) {
+      return { message: extractErrorMessage(error) };
+    }
+  }
+
   useEffect(() => {
     const controller = new AbortController();
+    fetchData(controller.signal);
 
-    async function fetchData() {
-      setLoading(true);
-      fetch("http://localhost:3333/api/teams", {
-        signal: controller.signal,
-      })
-        .then((res) => {
-          if (!res.ok) {
-            return { message: `Erreur : ${res.status}` };
-          }
-          return res.json();
-        })
-        .then((data) => {
-          if (!teamsChecking(data)) {
-            return { message: "Format de donnée invalide" };
-          }
-          setTeams(data);
-        })
-        .catch((error) => {
-          return { message: extractErrorMessage(error) };
-        })
-        .finally(() => setLoading(false));
-    }
-
-    fetchData();
     return () => controller.abort();
-  }, []);
-
+  });
   return { teams, loading };
 }
 
