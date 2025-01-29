@@ -17,14 +17,30 @@ export default class SessionController {
         .clearCookie('role')
         .plainCookie('token', token, {
           maxAge: '15m',
-          secure: false,
-          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
           httpOnly: false,
         })
-        .plainCookie('username', user.username, { httpOnly: false, secure: false, sameSite: 'lax' })
-        .plainCookie('email', user.email, { httpOnly: false, secure: false, sameSite: 'lax' })
-        .plainCookie('role', user.role, { httpOnly: false, secure: false, sameSite: 'lax' })
-        .plainCookie('id', user.id, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .plainCookie('username', user.username, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
+        })
+        .plainCookie('email', user.email, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
+        })
+        .plainCookie('role', user.role, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
+        })
+        .plainCookie('id', user.id, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
+        })
         .status(201)
         .json({ message: 'Connecté' })
     } catch (error: unknown) {
