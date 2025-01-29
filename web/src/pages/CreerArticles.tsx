@@ -41,6 +41,7 @@ export default function CreerArticle() {
       },
     })
       .then(() => setMessage("Article créé avec succès !"))
+      .then(() => setPost({ title: "", content: "" }))
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
   }

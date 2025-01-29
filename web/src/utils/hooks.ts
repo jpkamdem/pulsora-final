@@ -225,6 +225,7 @@ export function useGetTeams() {
 
   async function fetchData(signal?: AbortSignal) {
     try {
+      setLoading(true);
       const response = await fetch("http://localhost:3333/api/teams", {
         signal,
       });
@@ -240,6 +241,8 @@ export function useGetTeams() {
       setTeams(data);
     } catch (error) {
       return { message: extractErrorMessage(error) };
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -248,7 +251,7 @@ export function useGetTeams() {
     fetchData(controller.signal);
 
     return () => controller.abort();
-  });
+  }, []);
   return { teams, loading };
 }
 

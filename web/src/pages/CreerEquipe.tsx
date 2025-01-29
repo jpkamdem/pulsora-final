@@ -41,6 +41,7 @@ export default function CreerEquipe() {
       },
     })
       .then(() => setMessage("Equipe créée"))
+      .then(() => setTeamName(""))
       .catch((error) => extractErrorMessage(error))
       .catch(() => setMessage("Erreur lors de la création d'une équipe"));
   }

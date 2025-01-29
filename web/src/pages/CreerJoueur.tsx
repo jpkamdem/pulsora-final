@@ -64,6 +64,13 @@ export default function CreerJoueur() {
       }
 
       setMessage("Joueur créé.");
+      setPlayer({
+        firstName: "",
+        lastName: "",
+        number: 0,
+        position: undefined,
+        teamId: undefined,
+      });
     } catch (error) {
       setMessage(
         extractErrorMessage(error) || "Erreur lors de la création d'un joueur"
