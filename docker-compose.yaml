@@ -2,7 +2,7 @@ services:
   db:
     container_name: db
     env_file:
-      - adonis-api/.env
+      - api/.env
       - .env
     environment:
       POSTGRES_DB: ${DB_DATABASE}
@@ -25,19 +25,19 @@ services:
   api:
     container_name: api
     build:
-      context: ./adonis-api
+      context: ./api
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3333:3333"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:3333"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
     depends_on:
       - db
-      - web
+      # - web
     networks:
       - app-network
   web:

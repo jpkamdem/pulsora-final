@@ -10,6 +10,10 @@ COPY . .
 
 RUN chmod +x ./script.sh
 
-EXPOSE 3000
+EXPOSE 3333
+
+RUN node ace build
+
+COPY ./.env ./build
 
 ENTRYPOINT [ "./script.sh" ]
