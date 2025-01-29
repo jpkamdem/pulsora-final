@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useGetTeams } from "../utils/hooks";
 import { extractErrorMessage } from "../utils/security";
 import VideoLoading from "../components/VideoLoading";
+import SmallLoading from "../components/SmallLoading";
 
 export default function CreerEquipe() {
   const { teams, loading: teamLoading } = useGetTeams();
@@ -83,7 +84,7 @@ export default function CreerEquipe() {
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          {teamLoading ? "Création en cours..." : "Créer l'équipe"}
+          {teamLoading ? <SmallLoading value="équipes" /> : "Créer l'équipe"}
         </button>
       </form>
 

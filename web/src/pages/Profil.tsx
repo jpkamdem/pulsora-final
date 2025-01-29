@@ -16,6 +16,8 @@ export default function Profil() {
     role: "",
   });
   const [showButtons, setShowButtons] = useState(true);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,7 +34,6 @@ export default function Profil() {
     const storedToken = localStorage.getItem("token");
 
     if (!storedToken) {
-      console.log("Aucun token.");
       setDecodedToken({ email: "", role: "USER", username: "" });
       return;
     }
@@ -40,46 +41,46 @@ export default function Profil() {
     try {
       const token_expiresAt = Number(localStorage.getItem("expiresAt"));
       if (!token_expiresAt) {
-        console.log("Erreur interne");
-        return;
+        setError("Erreur interne");
       }
 
       const currentTime = Math.floor(Date.now() / 1000);
 
       if (Math.floor(token_expiresAt / 1000) < currentTime) {
-        console.log("Token expiré");
         lsValues.forEach((_, index) =>
           localStorage.removeItem(lsValues[index])
         );
-        return;
+        navigate("/home");
+        setMessage("Token expiré");
       }
 
       const username = localStorage.getItem("username");
       if (!username) {
-        console.log("Erreur interne");
+        setError("Erreur interne");
         return;
       }
       setDecodedToken((prev) => ({ ...prev, username: username }));
 
       const email = localStorage.getItem("email");
       if (!email) {
-        console.log("Erreur interne");
+        setError("Erreur interne");
         return;
       }
       setDecodedToken((prev) => ({ ...prev, email: email }));
 
       const role = localStorage.getItem("role");
       if (!role) {
-        console.log("Erreur interne");
+        setError("Erreur interne");
         return;
       }
       setDecodedToken((prev) => ({ ...prev, role: role }));
     } catch (error: unknown) {
-      console.log(`Erreur interne: ${extractErrorMessage(error)}`);
       lsValues.forEach((_, index) => localStorage.removeItem(lsValues[index]));
       setDecodedToken({ email: "", role: "USER", username: "" });
+      setError(`Erreur interne: ${extractErrorMessage(error)}`);
+      return;
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (location.pathname !== "/profil") {
@@ -106,8 +107,8 @@ export default function Profil() {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    console.log("Déconnexion réussie");
     navigate("/authentification");
+    return { message: "Déconnexion réussie" };
   };
 
   const handleLoginRedirect = () => {
@@ -178,6 +179,8 @@ export default function Profil() {
           </div>
         </>
       )}
+      {error ? <p>{error}</p> : null}
+      {message ? <p>{message}</p> : null}
     </div>
   );
 }

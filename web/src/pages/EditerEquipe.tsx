@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Team, useGetTeams } from "../utils/hooks";
 import { extractErrorMessage } from "../utils/security";
+import SmallLoading from "../components/SmallLoading";
 
 export default function EditerEquipe() {
   const { teams, loading: teamLoading } = useGetTeams();
@@ -75,7 +76,7 @@ export default function EditerEquipe() {
           </h2>
           <ul className="">
             {teamLoading ? (
-              <p>Chargement...</p>
+              <SmallLoading value="équipes" />
             ) : (
               teams &&
               teams.map((team) => (

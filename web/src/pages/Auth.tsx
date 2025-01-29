@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { extractErrorMessage } from "../utils/security";
 import { ApiError, ApiResponse } from "../utils/types";
+import { useNavigate } from "react-router-dom";
 
 type Token = {
   email: string;
@@ -40,6 +41,7 @@ export default function Auth() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const registerEmpty =
     registerForm.email === "" ||
@@ -152,6 +154,7 @@ export default function Auth() {
           }
         }
       });
+      navigate("/profil");
     } catch (error: unknown) {
       setLoginMessage((prev) => ({
         ...prev,

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useGetUserWithPosts } from "../utils/hooks";
+import SmallLoading from "../components/SmallLoading";
 
 export type Article = {
   id: number;
@@ -14,7 +15,11 @@ if (!userId) {
 }
 
 export default function EditerArticle() {
-  const { userWithPosts, loading: usersLoading } = useGetUserWithPosts(userId);
+  const {
+    userWithPosts,
+    loading: usersLoading,
+    refetch,
+  } = useGetUserWithPosts(userId);
   const storedToken = localStorage.getItem("token");
   const [updatedArticle, setUpdatedArticle] = useState<{
     title: string;
@@ -38,7 +43,9 @@ export default function EditerArticle() {
       headers: {
         "Content-Type": "application/json",
       },
-    }).catch((error) => console.log(error));
+    })
+      .then(() => refetch())
+      .catch((error) => console.log(error));
   }
 
   async function editArticle(e: FormEvent, id: number) {
@@ -56,7 +63,9 @@ export default function EditerArticle() {
       headers: {
         "Content-Type": "application/json",
       },
-    }).catch((error) => console.log(error));
+    })
+      .then(() => refetch())
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -68,7 +77,7 @@ export default function EditerArticle() {
           </h2>
           <ul>
             {usersLoading ? (
-              <p>Chargement des données...</p>
+              <SmallLoading value="utilisateurs" />
             ) : (
               userWithPosts &&
               userWithPosts.map((user, index) => (

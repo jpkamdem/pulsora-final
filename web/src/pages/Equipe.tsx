@@ -2,6 +2,7 @@ import React from "react";
 import Vide from "../components/Vide";
 import { useGetPlayers, useGetTeams } from "../utils/hooks";
 import { pos } from "../utils/types";
+import SmallLoading from "../components/SmallLoading";
 
 export default function Equipe() {
   const { teams, loading: teamLoading } = useGetTeams();
@@ -10,7 +11,7 @@ export default function Equipe() {
   return (
     <>
       {teamLoading ? (
-        <p>Chargement...</p>
+        <SmallLoading value="équipes" />
       ) : (
         <>
           {teams && teams.length > 0 ? (
@@ -45,7 +46,7 @@ export default function Equipe() {
                               Liste des joueurs
                             </ul>
                             {playerLoading ? (
-                              <p>Chargement</p>
+                              <SmallLoading value="joueurs" />
                             ) : (
                               <>
                                 {players &&

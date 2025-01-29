@@ -72,7 +72,7 @@ export default class PlayersController {
         return response.abort({ message: 'Joueur introuvable' })
       }
 
-      const { firstName, lastName, number, position, teamId } =
+      const { firstName, lastName, number, position, teamId, status } =
         await request.validateUsing(updatePlayerValidator)
 
       if (firstName) {
@@ -93,6 +93,10 @@ export default class PlayersController {
 
       if (teamId) {
         player.teamId = teamId
+      }
+
+      if (status) {
+        player.status = status
       }
 
       await player.save()

@@ -8,6 +8,7 @@ import {
 } from "../utils/hooks";
 import { pos } from "../utils/types";
 import React from "react";
+import SmallLoading from "../components/SmallLoading";
 
 export default function Saison() {
   const { games, loading: gameLoading } = useGetGames();
@@ -17,7 +18,7 @@ export default function Saison() {
   return (
     <>
       {gameLoading ? (
-        <p>Chargement des matchs...</p>
+        <SmallLoading value="matchs" />
       ) : (
         <>
           {games && games.length > 0 ? (

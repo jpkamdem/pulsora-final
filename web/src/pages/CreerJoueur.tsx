@@ -1,50 +1,28 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { TeamInterface } from "./Equipe";
+import { ChangeEvent, FormEvent, useState } from "react";
 import VideoLoading from "../components/VideoLoading";
-
-export type Position = "GK" | "DEF" | "MF" | "FW" | undefined;
-
-export type Player = {
-  firstname: string;
-  lastname: string;
-  number: number;
-  position: Position;
-  teamId: number | undefined;
-};
+import { extractErrorMessage } from "../utils/security";
+import { useGetTeams } from "../utils/hooks";
+import SmallLoading from "../components/SmallLoading";
 
 export default function CreerJoueur() {
-  const [teamsData, setTeamsData] = useState<TeamInterface[]>([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const [player, setPlayer] = useState<Player>({
-    firstname: "",
-    lastname: "",
+  const [player, setPlayer] = useState({
+    firstName: "",
+    lastName: "",
     number: 0,
     position: undefined,
     teamId: undefined,
   });
 
+  const { teams, loading: teamLoading } = useGetTeams();
+
   const isEmpty =
-    player.firstname.trim() === "" ||
-    player.lastname.trim() === "" ||
+    player.firstName.trim() === "" ||
+    player.lastName.trim() === "" ||
     player.teamId === undefined ||
-    player.position === undefined;
-
-  async function fetchTeamsData() {
-    await fetch("http://localhost:3000/teams", {
-      method: "GET",
-      mode: "cors",
-      credentials: "same-origin",
-    })
-      .then((res) => res.json())
-      .then((datas) => setTeamsData(datas.data))
-      .catch((err) => console.log(err));
-  }
-
-  useEffect(() => {
-    fetchTeamsData();
-  }, []);
+    player.position === undefined ||
+    player.number === 0;
 
   async function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setPlayer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -54,18 +32,18 @@ export default function CreerJoueur() {
     setPlayer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  const options: { value: Position; label: string }[] = [
-    { value: "GK", label: "Gardien" },
-    { value: "DEF", label: "Défenseur" },
-    { value: "MF", label: "Milieu" },
-    { value: "FW", label: "Attaquant" },
+  const options = [
+    { value: "gk", label: "Gardien" },
+    { value: "def", label: "Défenseur" },
+    { value: "mf", label: "Milieu" },
+    { value: "fw", label: "Attaquant" },
   ];
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/players", {
+      const response = await fetch("http://localhost:3333/api/players", {
         method: "POST",
         mode: "cors",
         credentials: "same-origin",
@@ -73,25 +51,23 @@ export default function CreerJoueur() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstname: player.firstname,
-          lastname: player.lastname,
+          firstName: player.firstName,
+          lastName: player.lastName,
           number: Number(player.number),
           position: player.position,
           teamId: Number(player.teamId),
-          status: "Opérationnel",
-          incidents: [],
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erreur inconnue du serveur");
+        throw new Error("Erreur inconnue du serveur");
       }
 
       setMessage("Joueur créé.");
-    } catch (err: any) {
-      console.log(err);
-      setMessage(err.message || "Erreur lors de la création d'un joueur");
+    } catch (error) {
+      setMessage(
+        extractErrorMessage(error) || "Erreur lors de la création d'un joueur"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -109,39 +85,48 @@ export default function CreerJoueur() {
 
         <ul className="w-full space-y-6">
           <li>
-            <label htmlFor="firstname" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="firstname"
+              className="block text-gray-700 font-semibold"
+            >
               Prénom
             </label>
             <input
               id="firstname"
               className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
-              name="firstname"
+              name="firstName"
               autoComplete="off"
               onChange={handleChange}
-              value={player.firstname}
+              value={player.firstName}
               placeholder="Entrez le prénom du joueur"
             />
           </li>
 
           <li>
-            <label htmlFor="lastname" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="lastname"
+              className="block text-gray-700 font-semibold"
+            >
               Nom
             </label>
             <input
-              id="lastname"
+              id="lastName"
               className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
-              name="lastname"
+              name="lastName"
               autoComplete="off"
               onChange={handleChange}
-              value={player.lastname}
+              value={player.lastName}
               placeholder="Entrez le nom du joueur"
             />
           </li>
 
           <li>
-            <label htmlFor="number" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="number"
+              className="block text-gray-700 font-semibold"
+            >
               Numéro
             </label>
             <input
@@ -150,13 +135,16 @@ export default function CreerJoueur() {
               type="number"
               name="number"
               onChange={handleChange}
-              value={player.number}
+              value={player?.number}
               placeholder="Entrez le numéro du joueur"
             />
           </li>
 
           <li>
-            <label htmlFor="position" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="position"
+              className="block text-gray-700 font-semibold"
+            >
               Poste
             </label>
             <select
@@ -176,7 +164,10 @@ export default function CreerJoueur() {
           </li>
 
           <li>
-            <label htmlFor="teamId" className="block text-gray-700 font-semibold">
+            <label
+              htmlFor="teamId"
+              className="block text-gray-700 font-semibold"
+            >
               Équipe
             </label>
             <select
@@ -187,11 +178,16 @@ export default function CreerJoueur() {
               onChange={handleChangeSelect}
             >
               <option value="">Sélectionner une équipe</option>
-              {teamsData.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.name}
-                </option>
-              ))}
+              {teamLoading ? (
+                <SmallLoading value="équipes" />
+              ) : (
+                teams &&
+                teams.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))
+              )}
             </select>
           </li>
         </ul>
@@ -209,7 +205,11 @@ export default function CreerJoueur() {
         </button>
       </form>
 
-      {isLoading ? <VideoLoading /> : message && <p className="text-center mt-4 text-green-500">{message}</p>}
+      {isLoading ? (
+        <VideoLoading />
+      ) : (
+        message && <p className="text-center mt-4 text-green-500">{message}</p>
+      )}
     </>
   );
 }

@@ -16,5 +16,6 @@ export const updatePlayerValidator = vine.compile(
     number: vine.number().withoutDecimals().positive().optional(),
     position: vine.enum(['gk', 'def', 'mf', 'fw']).optional(),
     teamId: vine.number().withoutDecimals().positive().optional(),
+    status: vine.enum(['opérationnel', 'blessé', 'suspendu', 'inconnu']).optional(),
   })
 )
