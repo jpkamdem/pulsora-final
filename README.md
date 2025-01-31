@@ -60,7 +60,7 @@ façon efficace
 
 #### Back
 
-- Node.Js (Express.Js, Prisma)
+- Node.Js (Adonis.js, Lucid)
 - PostgreSQL
 
 Tout le projet est réalisé avec TypeScript et se déploie via Docker.
@@ -77,16 +77,31 @@ Prérequis
 Créez 2 fichiers .env identiques, l'un à la racine pulsora-final/, l'autre à l'emplacement pulsora-final/api/ et collez-y ceci :
 
 ```env
-POSTGRES_DB=mydb
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-dev=localhost
-prod=db
+# dev
+NODE_ENV=development
+HOST=localhost
+DB_HOST=127.0.0.1
+TZ=UTC
 
-DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${prod}:5432/${POSTGRES_DB}?schema=public
+# prod
+# NODE_ENV=production
+# HOST=0.0.0.0
+# DB_HOST=db
+
+PORT=3333
+LOG_LEVEL=info
+APP_KEY=mok_QxLm94iTcKUOROy4XgRk0Ub4_Qph
+SESSION_DRIVER=cookie
+DB_PORT=5432
+DB_USER=root
+DB_PASSWORD=root
+DB_DATABASE=app
+DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?schema=public
+
+
 ```
 
-Selon la méthode de déploiement que vous choisirez, veuillez modifier la variable dev ou prod dans l'URL de la base de donnée dans les 2 fichiers.
+Selon la méthode de déploiement que vous choisirez, veuillez commenter les variables du mode de déploiement non choisi.
 
 #### Développement
 
@@ -106,7 +121,7 @@ npm run dev
 cd ./api/
 npm i
 docker compose up --wait db
-npx prisma db push
+node ace migration:run
 npm run dev
 ```
 

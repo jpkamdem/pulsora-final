@@ -10,48 +10,24 @@ export default class SessionController {
 
       const user = await User.verifyCredentials(email, password)
       const token = await User.accessTokens.create(user)
-      return (
-        response
-          .clearCookie('token', {
-            maxAge: '15m',
-            secure: true,
-            sameSite: 'none',
-            httpOnly: false,
-          })
-          // .clearCookie('user')
-          // .clearCookie('email')
-          // .clearCookie('role')
-          .plainCookie('token', token, {
-            maxAge: '15m',
-            secure: true,
-            sameSite: 'none',
-            httpOnly: false,
-          })
-          // .plainCookie('username', user.username, {
-          //   httpOnly: false,
-          //   secure: false,
-          //   sameSite: 'lax',
-          // })
-          // .plainCookie('email', user.email, {
-          //   httpOnly: false,
-          //   secure: false,
-          //   sameSite: 'lax',
-          // })
-          // .plainCookie('role', user.role, {
-          //   httpOnly: false,
-          //   secure: false,
-          //   sameSite: 'lax',
-          // })
-          // .plainCookie('id', user.id, {
-          //   httpOnly: false,
-          //   secure: false,
-          //   sameSite: 'lax',
-          // })
-          .status(201)
-          .json({ message: 'Connecté' })
-      )
+      return response
+        .clearCookie('token')
+        .clearCookie('user')
+        .clearCookie('email')
+        .clearCookie('role')
+        .plainCookie('token', token, {
+          maxAge: '15m',
+          secure: false,
+          sameSite: 'lax',
+          httpOnly: false,
+        })
+        .plainCookie('username', user.username, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .plainCookie('email', user.email, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .plainCookie('role', user.role, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .plainCookie('id', user.id, { httpOnly: false, secure: false, sameSite: 'lax' })
+        .status(201)
+        .json({ message: 'Connecté' })
     } catch (error: unknown) {
-      console.log(error)
       return response.abort({ message: extractErrorMessage(error) })
     }
   }
@@ -67,7 +43,6 @@ export default class SessionController {
       await user.save()
       return response.status(201).json({ message: 'Utilisateur créé' })
     } catch (error: unknown) {
-      console.log(error)
       return response.abort({ message: extractErrorMessage(error) })
     }
   }
