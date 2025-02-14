@@ -4,7 +4,7 @@ import { extractErrorMessage } from "../utils/security";
 import SmallLoading from "../components/SmallLoading";
 
 export default function EditerEquipe() {
-  const { teams, loading: teamLoading } = useGetTeams();
+  const { teams, loading: teamLoading, refetch } = useGetTeams();
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [updatedTeam, setUpdatedTeam] = useState<Team | null>(null);
 
@@ -16,12 +16,12 @@ export default function EditerEquipe() {
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       if (response.ok) {
         console.log("Equipe supprimée");
+        refetch();
       } else {
         throw new Error("Erreur lors de la suppression");
       }
@@ -46,7 +46,6 @@ export default function EditerEquipe() {
         body: JSON.stringify(updatedTeam),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -54,6 +53,7 @@ export default function EditerEquipe() {
         setSelectedTeam(null);
         setUpdatedTeam(null);
         console.log("Equipe mise à jour");
+        refetch();
       } else {
         throw new Error("Erreur lors de la mise à jour");
       }

@@ -252,7 +252,7 @@ export function useGetTeams() {
 
     return () => controller.abort();
   }, []);
-  return { teams, loading };
+  return { teams, loading, refetch: () => fetchData() };
 }
 
 export type TeamWithPlayers = {
