@@ -27,6 +27,13 @@ function parseCookie(): Record<string, string> {
 }
 
 export default function Auth() {
+  const [trigger, setTrigger] = useState(false);
+
+  function toggle() {
+    setTrigger(!trigger);
+    return;
+  }
+
   const [registerMessage, setRegisterMEssage] = useState({
     error: "",
     message: "",
@@ -81,6 +88,7 @@ export default function Auth() {
       const data = (await response.json()) as ApiResponse;
       setRegisterMEssage((prev) => ({ ...prev, message: data.message }));
       setRegisterForm({ email: "", password: "", username: "" });
+      setTrigger(!trigger);
     } catch (error: unknown) {
       setRegisterMEssage((prev) => ({
         ...prev,
@@ -165,65 +173,106 @@ export default function Auth() {
 
   return (
     <>
-      <h1>Inscription</h1>
-      <form onSubmit={handleRegister}>
-        <label>Adresse mail</label>
-        <input
-          type="email"
-          name="email"
-          onChange={(e) => handleRegisterChange(e)}
-          value={registerForm.email}
-        />
-        <label>Nom d'utilisateur</label>
-        <input
-          type="text"
-          name="username"
-          onChange={(e) => handleRegisterChange(e)}
-          value={registerForm.username}
-        />
-        <label>Mot de passe</label>
-        <input
-          type="password"
-          name="password"
-          onChange={(e) => handleRegisterChange(e)}
-          value={registerForm.password}
-        />
+      <section
+        className={`w-1/3 mx-auto mt-8 flex flex-col border-2 border-slate-700 justify-center ${
+          trigger ? "hidden" : ""
+        }`}
+      >
+        <h1 className="p-4 text-center bg-slate-700 text-white text-xl font-bold">
+          Inscription
+        </h1>
+        <form onSubmit={handleRegister}>
+          <div className="flex flex-col pl-[10%] py-4">
+            <label>Adresse mail</label>
+            <input
+              type="email"
+              name="email"
+              onChange={(e) => handleRegisterChange(e)}
+              value={registerForm.email}
+              className="w-2/3 border-2 border-slate-300"
+            />
+          </div>
+          <div className="flex flex-col pl-[10%] py-4">
+            <label>Nom d'utilisateur</label>
+            <input
+              type="text"
+              name="username"
+              onChange={(e) => handleRegisterChange(e)}
+              value={registerForm.username}
+              className="w-2/3 border-2 border-slate-300"
+            />
+          </div>
+          <div className="flex flex-col pl-[10%] py-4">
+            <label>Mot de passe</label>
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => handleRegisterChange(e)}
+              value={registerForm.password}
+              className="w-2/3 border-2 border-slate-300"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={registerEmpty}
+            className={`p-4 ml-[10%] ${registerEmpty ? `bg-red-500` : ""}`}
+          >
+            S'inscrire
+          </button>
+        </form>
+      </section>
+
+      <section
+        className={`w-1/3 mx-auto mt-8 flex flex-col border-2 border-slate-700 justify-center ${
+          trigger ? "" : "hidden"
+        }`}
+      >
+        <h1 className="p-4 text-center bg-slate-700 text-white text-xl font-bold">
+          Connexion
+        </h1>
+        <form onSubmit={handleLogin}>
+          <div className="flex flex-col pl-[10%] py-4">
+            <label>Adresse mail</label>
+            <input
+              type="email"
+              name="email"
+              onChange={(e) => handleLoginChange(e)}
+              value={loginForm.email}
+              className="w-2/3 border-2 border-slate-300"
+            />
+          </div>
+          <div className="flex flex-col pl-[10%] py-4">
+            <label>Mot de passe</label>
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => handleLoginChange(e)}
+              value={loginForm.password}
+              className="w-2/3 border-2 border-slate-300"
+            />
+          </div>
+          <div className="flex flex-col pl-[10%] py-4"></div>
+          <button
+            type="submit"
+            disabled={loginEmpty}
+            className={`p-4 ml-[10%] ${registerEmpty ? `bg-red-500` : ""}`}
+          >
+            Se connecter
+          </button>
+          {loginMessage.message && <p>{loginMessage.message}</p>}
+          {loginMessage.error && <p>{loginMessage.error}</p>}
+        </form>
+      </section>
+      <div className="flex justify-center mt-8">
         <button
-          type="submit"
-          disabled={registerEmpty}
-          className={registerEmpty ? `bg-red-500` : ""}
+          onClick={toggle}
+          className="text-lg p-4 text-white bg-slate-700 hover:bg-slate-300 hover:text-slate-700"
         >
-          S'inscrire
+          {trigger ? "S'inscrire" : "Se connecter"}
         </button>
-      </form>
+      </div>
       {registerMessage.message && <p>{registerMessage.message}</p>}
       {registerMessage.error && <p>{registerMessage.error}</p>}
-      <h1>Connexion</h1>
-      <form onSubmit={handleLogin}>
-        <label>Adresse mail</label>
-        <input
-          type="email"
-          name="email"
-          onChange={(e) => handleLoginChange(e)}
-          value={loginForm.email}
-        />
-        <label>Mot de passe</label>
-        <input
-          type="password"
-          name="password"
-          onChange={(e) => handleLoginChange(e)}
-          value={loginForm.password}
-        />
-        <button
-          type="submit"
-          disabled={loginEmpty}
-          className={loginEmpty ? `bg-red-500` : ""}
-        >
-          Se connecter
-        </button>
-        {loginMessage.message && <p>{loginMessage.message}</p>}
-        {loginMessage.error && <p>{loginMessage.error}</p>}
-      </form>
     </>
   );
 }
