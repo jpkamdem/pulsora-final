@@ -1,7 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { extractErrorMessage } from "../utils/security";
 import { ApiError, ApiResponse } from "../utils/types";
-import { useNavigate } from "react-router-dom";
+import authstade from "../assets/authstade.webp"
 
 type Token = {
   email: string;
@@ -28,12 +29,6 @@ function parseCookie(): Record<string, string> {
 
 export default function Auth() {
   const [trigger, setTrigger] = useState(false);
-
-  function toggle() {
-    setTrigger(!trigger);
-    return;
-  }
-
   const [registerMessage, setRegisterMEssage] = useState({
     error: "",
     message: "",
@@ -48,6 +43,7 @@ export default function Auth() {
     email: "",
     password: "",
   });
+
   const navigate = useNavigate();
 
   const registerEmpty =
@@ -56,6 +52,11 @@ export default function Auth() {
     registerForm.password === "";
 
   const loginEmpty = loginForm.email === "" || loginForm.password === "";
+
+  function toggle() {
+    setTrigger(!trigger);
+    return;
+  }
 
   function handleRegisterChange(e: ChangeEvent<HTMLInputElement>) {
     setRegisterForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -172,107 +173,120 @@ export default function Auth() {
   }
 
   return (
-    <>
-      <section
-        className={`w-1/3 mx-auto mt-8 flex flex-col border-2 border-slate-700 justify-center ${
-          trigger ? "hidden" : ""
-        }`}
-      >
-        <h1 className="p-4 text-center bg-slate-700 text-white text-xl font-bold">
-          Inscription
-        </h1>
-        <form onSubmit={handleRegister}>
-          <div className="flex flex-col pl-[10%] py-4">
-            <label>Adresse mail</label>
-            <input
-              type="email"
-              name="email"
-              onChange={(e) => handleRegisterChange(e)}
-              value={registerForm.email}
-              className="w-2/3 border-2 border-slate-300"
-            />
-          </div>
-          <div className="flex flex-col pl-[10%] py-4">
-            <label>Nom d'utilisateur</label>
-            <input
-              type="text"
-              name="username"
-              onChange={(e) => handleRegisterChange(e)}
-              value={registerForm.username}
-              className="w-2/3 border-2 border-slate-300"
-            />
-          </div>
-          <div className="flex flex-col pl-[10%] py-4">
-            <label>Mot de passe</label>
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => handleRegisterChange(e)}
-              value={registerForm.password}
-              className="w-2/3 border-2 border-slate-300"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={registerEmpty}
-            className={`p-4 ml-[10%] ${registerEmpty ? `bg-red-500` : ""}`}
-          >
-            S'inscrire
-          </button>
-        </form>
-      </section>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg overflow-hidden flex flex-col lg:flex-row">
+        {/* Partie Image du stade */}
+        <div className="w-full lg:w-1/2">
+          <img src={authstade} alt="Stade" className="w-full h-64 object-cover lg:h-full" />
+        </div>
 
-      <section
-        className={`w-1/3 mx-auto mt-8 flex flex-col border-2 border-slate-700 justify-center ${
-          trigger ? "" : "hidden"
-        }`}
-      >
-        <h1 className="p-4 text-center bg-slate-700 text-white text-xl font-bold">
-          Connexion
-        </h1>
-        <form onSubmit={handleLogin}>
-          <div className="flex flex-col pl-[10%] py-4">
-            <label>Adresse mail</label>
-            <input
-              type="email"
-              name="email"
-              onChange={(e) => handleLoginChange(e)}
-              value={loginForm.email}
-              className="w-2/3 border-2 border-slate-300"
-            />
+        {/* Formulaire */}
+        <div className="w-full lg:w-1/2 p-6 lg:p-8 flex flex-col justify-center">
+          <div className={`w-full mx-auto ${trigger ? "" : "hidden"}`}>
+            <h1 className="text-center text-2xl font-bold text-gray-700 mb-4">
+              Connexion
+            </h1>
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-gray-600">Adresse mail</label>
+                <input
+                  type="email"
+                  name="email"
+                  onChange={handleLoginChange}
+                  value={loginForm.email}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-gray-600">Mot de passe</label>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handleLoginChange}
+                  value={loginForm.password}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loginEmpty}
+                className="w-full py-2 bg-blue-600 text-white rounded-lg disabled:bg-gray-300"
+              >
+                Se connecter
+              </button>
+              {loginMessage.message && <p className="text-green-500 mt-2">{loginMessage.message}</p>}
+              {loginMessage.error && <p className="text-red-500 mt-2">{loginMessage.error}</p>}
+            </form>
           </div>
-          <div className="flex flex-col pl-[10%] py-4">
-            <label>Mot de passe</label>
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => handleLoginChange(e)}
-              value={loginForm.password}
-              className="w-2/3 border-2 border-slate-300"
-            />
+
+          <div className={`w-full mx-auto ${!trigger ? "" : "hidden"}`}>
+            <h1 className="text-center text-2xl font-bold text-gray-700 mb-4">
+              Inscription
+            </h1>
+            <form onSubmit={handleRegister}>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-gray-600">Adresse mail</label>
+                <input
+                  type="email"
+                  name="email"
+                  onChange={handleRegisterChange}
+                  value={registerForm.email}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="username" className="block text-gray-600">Nom d'utilisateur</label>
+                <input
+                  type="text"
+                  name="username"
+                  onChange={handleRegisterChange}
+                  value={registerForm.username}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-gray-600">Mot de passe</label>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handleRegisterChange}
+                  value={registerForm.password}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={registerEmpty}
+                className="w-full py-2 bg-blue-600 text-white rounded-lg disabled:bg-gray-300"
+              >
+                S'inscrire
+              </button>
+              {registerMessage.message && <p className="text-green-500 mt-2">{registerMessage.message}</p>}
+              {registerMessage.error && <p className="text-red-500 mt-2">{registerMessage.error}</p>}
+            </form>
           </div>
-          <div className="flex flex-col pl-[10%] py-4"></div>
-          <button
-            type="submit"
-            disabled={loginEmpty}
-            className={`p-4 ml-[10%] ${registerEmpty ? `bg-red-500` : ""}`}
-          >
-            Se connecter
-          </button>
-          {loginMessage.message && <p>{loginMessage.message}</p>}
-          {loginMessage.error && <p>{loginMessage.error}</p>}
-        </form>
-      </section>
-      <div className="flex justify-center mt-8">
-        <button
-          onClick={toggle}
-          className="text-lg p-4 text-white bg-slate-700 hover:bg-slate-300 hover:text-slate-700"
-        >
-          {trigger ? "S'inscrire" : "Se connecter"}
-        </button>
+
+          <div className="mt-4 text-center">
+            {/* Texte pour passer de Connexion à Inscription et inversement */}
+            <div className="text-blue-600 cursor-pointer">
+              {!trigger && (
+                <p>Vous avez déjà un compte?{" "}
+                  <span onClick={() => setTrigger(true)} className="underline">
+                    Connectez-vous
+                  </span>
+                </p>
+              )}
+              {trigger && (
+                <p>Vous n'avez pas encore de compte?{" "}
+                  <span onClick={() => setTrigger(false)} className="underline">
+                    Inscrivez-vous
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      {registerMessage.message && <p>{registerMessage.message}</p>}
-      {registerMessage.error && <p>{registerMessage.error}</p>}
-    </>
+    </div>
   );
 }
