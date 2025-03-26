@@ -55,14 +55,25 @@ export default function Equipe() {
                                       {player.teamId === team.id ? (
                                         <li className="list-none">
                                           <p>
-                                            {player.number} -{" "}
+                                            <span className="font-bold">
+                                              {player.number}
+                                            </span>{" "}
+                                            -{" "}
                                             <span className="capitalize">
                                               {player.firstName}
                                             </span>{" "}
                                             <span className="capitalize">
                                               {player.lastName}
                                             </span>{" "}
-                                            - {pos(player.position)}
+                                            -{" "}
+                                            <span className="underline">
+                                              {pos(player.position)}
+                                            </span>{" "}
+                                            <br />{" "}
+                                            <span className="capitalize">
+                                              état :
+                                            </span>{" "}
+                                            {player.status}
                                           </p>
                                         </li>
                                       ) : null}
